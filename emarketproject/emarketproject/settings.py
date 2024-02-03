@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # created apps
     'core',
+    'userauths',
 ]
 
 MIDDLEWARE = [
@@ -134,8 +135,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 JAZZMIN_SETTINGS = {
     'site_header': 'AgriEmpower Africa',
-    'site_logo': 'assets/imgs/logo/logo.png',
+    'site_logo': 'assets/imgs/logo/logo1.png',
     # 'site_brand': 'Growth beyond borders',
     'site_brand': 'AgriEmpower Africa',
     'site_copyright': 'agriempowerafrica.com/'
 }
+
+
+AUTH_USER_MODEL = 'userauths.User'

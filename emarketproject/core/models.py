@@ -57,14 +57,9 @@ class CustomUUIDField(models.UUIDField):
 
 # Create your models here.
 class Category(models.Model):
-    categoryId = CustomUUIDField(unique=True, alphabet="12345abcdefghi")
+    # categoryId = CustomUUIDField(unique=True, length=10, max_length=20, prefix="CAT", alphabet="12345abcdefghi")
 
-    # categoryId = CustomUUIDField(unique=True, max_length=20, alphabet="12345abcdefghi")
-    # categoryId = CustomUUIDField(unique=True, length=10, prefix="CAT", alphabet="12345abcdefghi")
-
-
-    # categoryId = models.UUIDField(unique=True, length=10, max_length=20, prefix="CAT", alphabet="12345abcdefghi")
-    # categoryId = models.UUIDField(unique=True, max_length=20, alphabet="12345abcdefghi")
+    categoryId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="CAT", alphabet="12345abcdefghi")
 
     title = models.CharField(max_length=100, default="Food stuff")
     image = models.ImageField(upload_to="category", default="category.jpg")
@@ -119,7 +114,7 @@ class Product(models.Model):
     old_price = models.DecimalField(max_digits=999999999, decimal_places=2, default=19.99)
  
     specification = models.TextField(null=True, blank=True, default="Specifications")
-    tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
+    # tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
 
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_review")
     status = models.BooleanField(default=True)

@@ -32,7 +32,7 @@ def user_directory_path(instance, filename):
     return 'user_{0}/{1}'.format(instance.user.id, filename)
 
 class CustomUUIDField(models.UUIDField):
-    def __init__(self, length, prefix, alphabet, *args, **kwargs):
+    def __init__(self, length=10, prefix="CAT", alphabet="12345abcdefghi", *args, **kwargs):
         self.length = length
         self.prefix = prefix
         self.alphabet = alphabet
@@ -57,11 +57,13 @@ class CustomUUIDField(models.UUIDField):
 
 # Create your models here.
 class Category(models.Model):
+    categoryId = CustomUUIDField(unique=True, alphabet="12345abcdefghi")
+
     # categoryId = CustomUUIDField(unique=True, max_length=20, alphabet="12345abcdefghi")
     # categoryId = CustomUUIDField(unique=True, length=10, prefix="CAT", alphabet="12345abcdefghi")
 
 
-    categoryId = CustomUUIDField(unique=True, length=10, max_length=20, prefix="CAT", alphabet="12345abcdefghi")
+    # categoryId = models.UUIDField(unique=True, length=10, max_length=20, prefix="CAT", alphabet="12345abcdefghi")
     # categoryId = models.UUIDField(unique=True, max_length=20, alphabet="12345abcdefghi")
 
     title = models.CharField(max_length=100, default="Food stuff")
@@ -168,6 +170,7 @@ class CartOrder(models.Model):
 
 class CartItems(models.Model):
     order = models.ForeignKey(CartOrder, on_delete=models.CASCADE)
+    invoice_number = models.CharField(max_length=200)
     product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)

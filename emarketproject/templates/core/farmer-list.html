@@ -32,7 +32,7 @@
                     <div class="col-12 col-lg-8 mx-auto">
                         <div class="shop-product-fillter">
                             <div class="totall-product">
-                                <p>We have <strong class="text-brand">780</strong> vendors now</p>
+                                <p>We have <strong class="text-brand">{{farmers.count}}</strong> farmer{{farmers.count | pluralize}} now</p>
                             </div>
                             <div class="sort-by-product-area">
                                 <div class="sort-by-cover mr-10">
@@ -78,27 +78,28 @@
                     </div>
                 </div>
                 <div class="row vendor-grid">
+                    {% for farmer in farmers %}
                     <div class="col-lg-6 col-md-6 col-12 col-sm-6">
                         <div class="vendor-wrap style-2 mb-40">
                             <div class="product-badges product-badges-position product-badges-mrg">
-                                <span class="hot">Mall</span>
+                                <!-- <span class="hot">Mall</span> -->
                             </div>
                             <div class="vendor-img-action-wrap">
                                 <div class="vendor-img">
                                     <a href="vendor-details-1.html">
-                                        <img class="default-img" src="assets/imgs/vendor/vendor-1.png" alt="" />
+                                        <img class="default-img" src="{{farmer.image.url}}" alt="" />
                                     </a>
                                 </div>
                                 <div class="mt-10">
-                                    <span class="font-small total-product">380 products</span>
+                                    <span class="font-small total-product">{{farmer.farmer.all.count}} Products</span>
                                 </div>
                             </div>
                             <div class="vendor-content-wrap">
                                 <div class="mb-30">
                                     <div class="product-category">
-                                        <span class="text-muted">Since 2012</span>
+                                        <span class="text-muted">Since {{farmer.date|date:"Y"}}</span>
                                     </div>
-                                    <h4 class="mb-5"><a href="vendor-details-1.html">Nature Food</a></h4>
+                                    <h4 class="mb-5"><a href="vendor-details-1.html">{{farmer.title}}</a></h4>
                                     <div class="product-rate-cover">
                                         <div class="product-rate d-inline-block">
                                             <div class="product-rating" style="width: 90%"></div>
@@ -107,15 +108,20 @@
                                     </div>
                                     <div class="vendor-info d-flex justify-content-between align-items-end mt-30">
                                         <ul class="contact-infor text-muted">
-                                            <li><img src="assets/imgs/theme/icons/icon-location.svg" alt="" /><strong>Address: </strong> <span>5171 W Campbell Ave undefined Kent, Utah 53127 United States</span></li>
-                                            <li><img src="assets/imgs/theme/icons/icon-contact.svg" alt="" /><strong>Call Us:</strong><span>(+91) - 540-025-124553</span></li>
+                                            <li><img src="assets/imgs/theme/icons/icon-location.svg" alt="" /><strong>Address: </strong> <span>{{farmer.address}}</span></li>
+                                            <li><img src="assets/imgs/theme/icons/icon-contact.svg" alt="" /><strong>Call Us:</strong><span>{{farmer.contact}}</span></li>
                                         </ul>
-                                        <a href="vendor-details-1.html" class="btn btn-xs">Visit Store <i class="fi-rs-arrow-small-right"></i></a>
+                                        
+                                        <!-- <a href="vendor-details-1.html" class="btn btn-xs">Visit Store <i class="fi-rs-arrow-small-right"></i></a> -->
                                     </div>
+                                    <br>
+                                    <a href="vendor-details-1.html" class="btn btn-xs">Visit Store <i class="fi-rs-arrow-small-right"></i></a>
+
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                     <!--end vendor card-->
                    
                 </div>

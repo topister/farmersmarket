@@ -79,6 +79,7 @@ class Tags(models.Model):
 class Farmer(models.Model):
     farmerId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="farm", alphabet="12345abcdefghi")
     title = models.CharField(max_length=100, default="Digify farmer")
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
     description = models.TextField(null=True, blank=True, default="I am a great farmer")
     address = models.CharField(max_length=100, default="Busia, Kenya")
@@ -109,7 +110,7 @@ class Product(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
-    farmer = models.ForeignKey(Farmer, on_delete=models.SET_NULL, null=True)
+    farmer = models.ForeignKey(Farmer, on_delete=models.SET_NULL, null=True, related_name="farmer")
 
     price = models.DecimalField(max_digits=999999999, decimal_places=2, default=9.99)
     old_price = models.DecimalField(max_digits=999999999, decimal_places=2, default=19.99)
@@ -226,8 +227,3 @@ class Address(models.Model):
         verbose_name_plural = "Address"
 
    
-
-
-
-
-

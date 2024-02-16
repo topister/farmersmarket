@@ -41,9 +41,9 @@ def product_list_category(request, categoryId):
     return render(request, "core/category-product-list.html", context)
 
 def farmer_list(request):
-    farmer = Farmer.objects.all()
+    farmers = Farmer.objects.all()
     context = {
-        "farmer": farmer
+        "farmers": farmers
     }
 
     return render(request, "core/farmer-list.html", context)

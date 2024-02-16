@@ -39,3 +39,11 @@ def product_list_category(request, categoryId):
         "products":products
     }
     return render(request, "core/category-product-list.html", context)
+
+def farmer_list(request):
+    farmer = Farmer.objects.all()
+    context = {
+        "farmer": farmer
+    }
+
+    return render(request, "core/farmer-list.html", context)

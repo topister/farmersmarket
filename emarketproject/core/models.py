@@ -81,14 +81,15 @@ class Farmer(models.Model):
     title = models.CharField(max_length=100, default="Digify farmer")
     date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
+    cover_image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
     description = models.TextField(null=True, blank=True, default="I am a great farmer")
     address = models.CharField(max_length=100, default="Busia, Kenya")
     contact = models.CharField(max_length=100, default="+254740298531")
     chat_response_time = models.CharField(max_length=100, default="100")
     shipping_on_time = models.CharField(max_length=100, default="100")
-    authentic_rating = models.CharField(max_length=100, default="100")
-    days_return = models.CharField(max_length=100, default="100")
-    warranty_period = models.CharField(max_length=100, default="100")
+    authentic_rating = models.CharField(max_length=100, default="98")
+    days_return = models.CharField(max_length=100, default="7")
+    warranty_period = models.CharField(max_length=100, default="4")
     # Whenever the farmer is deleted his/her shop is not deleted
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
@@ -116,6 +117,10 @@ class Product(models.Model):
     old_price = models.DecimalField(max_digits=999999999, decimal_places=2, default=19.99)
  
     specification = models.TextField(null=True, blank=True, default="Specifications")
+    type = models.CharField(max_length=100, default="Organic product", null=True, blank=True)
+    stock_count = models.CharField(max_length=100, default="5", null=True, blank=True)
+
+
     # tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
 
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_review")
@@ -145,7 +150,7 @@ class Product(models.Model):
 
 class ProductImages(models.Model):
     images = models.ImageField(upload_to="product-images", default="product.jpg")
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    product = models.ForeignKey(Product, related_name="product_images", on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta:

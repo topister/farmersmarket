@@ -9,6 +9,7 @@ urlpatterns = [
     # products
 
     path('products/', views.product_list, name="product-list"),
+    path('products/<productId>', views.product_detail, name="product-detail"),
 
     # categories
     path('categories/', views.category_list, name="category-list"),
@@ -16,6 +17,7 @@ urlpatterns = [
 
     # farmers
     path('farmers/', views.farmer_list, name='farmer-list'),
+    path('farmer/<farmerId>', views.farmer_details, name= "farmer-detail" ),
 
 
 ]

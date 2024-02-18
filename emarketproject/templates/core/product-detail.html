@@ -403,13 +403,14 @@
                                     </div>
                                     <div class="col-12">
                                         <div class="row related-products">
+                                            {% for product in products %}
                                             <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                                                 <div class="product-cart-wrap hover-up">
                                                     <div class="product-img-action-wrap">
                                                         <div class="product-img product-img-zoom">
                                                             <a href="shop-product-right.html" tabindex="0">
-                                                                <img class="default-img" src="{% static 'assets/imgs/shop/product-2-1.jpg' %}" alt="" />
-                                                                <img class="hover-img" src="{% static 'assets/imgs/shop/product-2-2.jpg' %}" alt="" />
+                                                                <img class="default-img" src="{{product.image.url}}" alt="product image" />
+                                                                <img class="hover-img" src="{{product.image.url}}" alt="product image" />
                                                             </a>
                                                         </div>
                                                         <div class="product-action-1">
@@ -422,107 +423,18 @@
                                                         </div>
                                                     </div>
                                                     <div class="product-content-wrap">
-                                                        <h2><a href="shop-product-right.html" tabindex="0">Ulstra Bass Headphone</a></h2>
+                                                        <h2><a href="shop-product-right.html" tabindex="0">{{product.title|truncatechars:20}}</a></h2>
                                                         <div class="rating-result" title="90%">
                                                             <span> </span>
                                                         </div>
                                                         <div class="product-price">
-                                                            <span>$238.85 </span>
-                                                            <span class="old-price">$245.8</span>
+                                                            <span>kshs.{{product.price}} </span>
+                                                            <span class="old-price">kshs.{{product.old_price}}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                                <div class="product-cart-wrap hover-up">
-                                                    <div class="product-img-action-wrap">
-                                                        <div class="product-img product-img-zoom">
-                                                            <a href="shop-product-right.html" tabindex="0">
-                                                                <img class="default-img" src="{% static 'assets/imgs/shop/product-3-1.jpg' %}" alt="" />
-                                                                <img class="hover-img" src="{% static 'assets/imgs/shop/product-4-2.jpg' %}" alt="" />
-                                                            </a>
-                                                        </div>
-                                                        <div class="product-action-1">
-                                                            <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                                            <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                                            <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
-                                                        </div>
-                                                        <div class="product-badges product-badges-position product-badges-mrg">
-                                                            <span class="sale">-12%</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-content-wrap">
-                                                        <h2><a href="shop-product-right.html" tabindex="0">Smart Bluetooth Speaker</a></h2>
-                                                        <div class="rating-result" title="90%">
-                                                            <span> </span>
-                                                        </div>
-                                                        <div class="product-price">
-                                                            <span>$138.85 </span>
-                                                            <span class="old-price">$145.8</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                                <div class="product-cart-wrap hover-up">
-                                                    <div class="product-img-action-wrap">
-                                                        <div class="product-img product-img-zoom">
-                                                            <a href="shop-product-right.html" tabindex="0">
-                                                                <img class="default-img" src="{% static 'assets/imgs/shop/product-4-1.jpg' %}" alt="" />
-                                                                <img class="hover-img" src="{% static 'assets/imgs/shop/product-4-2.jpg' %}" alt="" />
-                                                            </a>
-                                                        </div>
-                                                        <div class="product-action-1">
-                                                            <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                                            <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                                            <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
-                                                        </div>
-                                                        <div class="product-badges product-badges-position product-badges-mrg">
-                                                            <span class="new">New</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-content-wrap">
-                                                        <h2><a href="shop-product-right.html" tabindex="0">HomeSpeak 12UEA Goole</a></h2>
-                                                        <div class="rating-result" title="90%">
-                                                            <span> </span>
-                                                        </div>
-                                                        <div class="product-price">
-                                                            <span>$738.85 </span>
-                                                            <span class="old-price">$1245.8</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-4 col-12 col-sm-6 d-lg-block d-none">
-                                                <div class="product-cart-wrap hover-up mb-0">
-                                                    <div class="product-img-action-wrap">
-                                                        <div class="product-img product-img-zoom">
-                                                            <a href="shop-product-right.html" tabindex="0">
-                                                                <img class="default-img" src="{% static 'assets/imgs/shop/product-5-1.jpg' %}" alt="" />
-                                                                <img class="hover-img" src="{% static 'assets/imgs/shop/product-3-2.jpg' %}" alt="" />
-                                                            </a>
-                                                        </div>
-                                                        <div class="product-action-1">
-                                                            <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-search"></i></a>
-                                                            <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="shop-wishlist.html" tabindex="0"><i class="fi-rs-heart"></i></a>
-                                                            <a aria-label="Compare" class="action-btn small hover-up" href="shop-compare.html" tabindex="0"><i class="fi-rs-shuffle"></i></a>
-                                                        </div>
-                                                        <div class="product-badges product-badges-position product-badges-mrg">
-                                                            <span class="hot">Hot</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="product-content-wrap">
-                                                        <h2><a href="shop-product-right.html" tabindex="0">Dadua Camera 4K 2022EF</a></h2>
-                                                        <div class="rating-result" title="90%">
-                                                            <span> </span>
-                                                        </div>
-                                                        <div class="product-price">
-                                                            <span>$89.8 </span>
-                                                            <span class="old-price">$98.8</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>
@@ -604,7 +516,7 @@
                                 </ul>
                                 <p>Become a Farmer? <a href="page-register.html"> Register now</a></p>
                             </div>
-                            <div class="sidebar-widget widget-category-2 mb-30">
+                            <!-- <div class="sidebar-widget widget-category-2 mb-30">
                                 <h5 class="section-title style-1 mb-30">Category</h5>
                                 <ul>
                                     <li>
@@ -623,7 +535,7 @@
                                         <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Fresh Fruit</a><span class="count">87</span>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> -->
                             <!-- Fillter By Price -->
                             <div class="sidebar-widget price_range range mb-30">
                                 <h5 class="section-title style-1 mb-30">Fill by price</h5>
@@ -633,10 +545,11 @@
                                         <div class="d-flex justify-content-between">
                                             <div class="caption">From: <strong id="slider-range-value1" class="text-brand"></strong></div>
                                             <div class="caption">To: <strong id="slider-range-value2" class="text-brand"></strong></div>
+                                            <br><br><br><br>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="list-group">
+                                <!-- <div class="list-group">
                                     <div class="list-group-item mb-10 mt-10">
                                         <label class="fw-900">Color</label>
                                         <div class="custome-checkbox">
@@ -661,8 +574,8 @@
                                             <label class="form-check-label" for="exampleCheckbox31"><span>Used (45)</span></label>
                                         </div>
                                     </div>
-                                </div>
-                                <a href="shop-grid-right.html" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i> Fillter</a>
+                                </div> -->
+                                <a href="shop-grid-right.html" class="btn btn-sm btn-default"> Fillter</a>
                             </div>
                             <!-- Product sidebar Widget -->
                             <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">

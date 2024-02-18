@@ -49,14 +49,14 @@
         var moneyFormat = wNumb({
             decimals: 0,
             thousand: ",",
-            prefix: "$"
+            prefix: "ksh"
         });
         noUiSlider.create(rangeSlider, {
             start: [500, 1000],
             step: 1,
             range: {
                 min: [0],
-                max: [2000]
+                max: [20000]
             },
             format: moneyFormat,
             connect: true

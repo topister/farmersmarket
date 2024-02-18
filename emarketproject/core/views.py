@@ -63,9 +63,12 @@ def product_detail(request, productId):
     # Get the product from the database using its ID.
     product = Product.objects.get(productId=productId)
     product_image = product.product_images.all()  
+    products = Product.objects.filter(category=product.category)
+
     context = {
         "product" : product,
         "product_image": product_image,
+        "products":products,
     }
 
     return render(request,"core/product-detail.html",context)

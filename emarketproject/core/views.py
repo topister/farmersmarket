@@ -63,7 +63,8 @@ def product_detail(request, productId):
     # Get the product from the database using its ID.
     product = Product.objects.get(productId=productId)
     product_image = product.product_images.all()  
-    products = Product.objects.filter(category=product.category)
+    product = Product.objects.get(productId=productId)
+    products = Product.objects.filter(category=product.category).exclude(productId=productId)
 
     context = {
         "product" : product,

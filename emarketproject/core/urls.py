@@ -19,5 +19,8 @@ urlpatterns = [
     path('farmers/', views.farmer_list, name='farmer-list'),
     path('farmer/<farmerId>', views.farmer_details, name= "farmer-detail" ),
 
+    # tags
+    path("products/tags/<slug:tag_slug>/",views.tag_list , name="tag-list"),
+
 
 ]

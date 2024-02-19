@@ -1,6 +1,7 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import get_object_or_404, render, HttpResponse
 from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
 from django.http import JsonResponse
+from taggit.models import Tag
 
 # Create your views here.
 def index(request):
@@ -89,6 +90,19 @@ def default(request):
     }
 
     return render(request,"core/product-detail.html",context)
+
+
+def tag_list(request, tag_slug=None):
+    products = Product.objects.filter(product_status='published').order_by('-id')
+    tag = None
+    if tag_slug:
+        tag= get_object_or_404(Tag, slug=tag_slug)
+        products = products.filter(tags__in=[tag])
+    context={'products':products,
+             'tag':tag
+             }
+    return render(request, 'core/tag_list.html', context)
+
 
 def make_address_default(request):
     id = request.GET['id']

@@ -3,6 +3,7 @@ from shortuuid.django_fields import ShortUUIDField
 from django.utils.safestring import mark_safe
 from userauths.models import User
 import uuid
+from taggit.managers import TaggableManager
 
 
 STATUS_CHOICE=(
@@ -122,6 +123,7 @@ class Product(models.Model):
 
 
     # tags = models.ForeignKey(Tags, on_delete=models.SET_NULL, null=True)
+    tags = TaggableManager(blank=True)
 
     product_status = models.CharField(choices=STATUS, max_length=10, default="in_review")
     status = models.BooleanField(default=True)

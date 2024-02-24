@@ -9392,10 +9392,16 @@ span.fi-rs-apps {
     color: #3BB77E;
 }
 
-.price_range {
+/* .price_range {
     background: url(../imgs/banner/fillter-widget-bg.png) no-repeat right bottom;
     background-size: 150px;
-}
+} */
+
+/* .price_range {
+    background: url(../imgs/theme/download.svg) no-repeat right bottom;
+    
+    background-size: 150px;
+} */
 
 .primary-sidebar .sidebar-widget {
     position: relative;

@@ -1,7 +1,12 @@
-from django.shortcuts import get_object_or_404, render, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
 from django.http import JsonResponse
 from taggit.models import Tag
+from django.db.models import Count, Avg
+from core.forms import ProductReviewForm
+from django.http import JsonResponse, HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Create your views here.
 def index(request):
@@ -62,15 +67,34 @@ def farmer_details(request, farmerId):
 
 def product_detail(request, productId):
     # Get the product from the database using its ID.
-    product = Product.objects.get(productId=productId)
-    product_image = product.product_images.all()  
+    # product = Product.objects.get(productId=productId)
+    
+      
     product = Product.objects.get(productId=productId)
     products = Product.objects.filter(category=product.category).exclude(productId=productId)
+
+    product_image = product.product_images.all()
+
+
+    # getting all reviews
+    reviews = ProductReview.objects.filter(product=product).order_by("-date")
+
+    # Get average reviews related to product
+    average_rating = ProductReview.objects.filter(product=product).aggregate(rating=Avg('rating'))
+
+    # product review form
+    review_form = ProductReviewForm()
+
+
+
 
     context = {
         "product" : product,
         "product_image": product_image,
         "products":products,
+        "reviews":reviews,
+        "average_rating":average_rating,
+        "review_form": review_form,
     }
 
     return render(request,"core/product-detail.html",context)
@@ -109,3 +133,48 @@ def make_address_default(request):
     Address.objects.update(status=False)
     Address.objects.filter(id=id).update(status=True)
     return JsonResponse({"boolean": True})
+
+def ajax_add_review(request, productId):
+    # product = Product.objects.get(productId=productId)
+    print(f"productId: {productId}")
+
+
+    try:
+        product = Product.objects.get(productId=productId)
+    except ObjectDoesNotExist:
+        return JsonResponse({'error': 'Product not found'}, status=404)
+    
+    user = request.user
+
+    review = ProductReview.objects.create(
+        user = user,
+        product=product,
+        review=request.POST["review"],
+        rating=request.POST["rating"],
+    )
+
+    
+
+    context = {
+        "user":review.user.username,
+        "review":review.review,
+        "rating":review.rating,
+
+        # "user":user.username,
+
+        # "review":request.POST['review'],
+        # "rating":request.POST['rating'],
+
+
+    }
+
+    average_reviews = ProductReview.objects.filter(product=product).aggregate(rating=Avg("rating"))
+    
+    return JsonResponse(
+        {
+            'bool':True,
+            'context' :context,
+            'average_reviews': average_reviews,
+        }
+    )
+

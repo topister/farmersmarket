@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # Third party
     'taggit',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,86 @@ JAZZMIN_SETTINGS = {
 
 
 AUTH_USER_MODEL = 'userauths.User'
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'skin': 'moono',
+        'codeSnippet_theme':'monokai',
+        'toolbar': 'all',
+        'extraPlugins': ','.join([
+            'codesnippet',  # panels
+            'widget',
+            'dialog'
+        ]),
+
+}
+}
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'toolbar': 'Full',
+#         'extraPlugins': ','.join([
+#             'image2',  # register the image2 plugin
+#             'uploadfile',  # register the uploadfile plugin on the toolbar
+#         ]),
+#     },
+# }
+
+# LOGIN_REDIRECT_URL = 'dashboard'
+# LOGOUT_REDIRECT_URL = 'login'
+
+# CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = config('EMAIL_HOST')
+# EMAIL_PORT = config('EMAIL_PORT')
+# EMAIL_USE_TLS = True
+# EMAIL_FROM = config("EMAIL_FROM")
+# SERVER_EMAIL = EMAIL_FROM
+
+# ACCOUNT_ACTIVATION_DAYS = 7
+# REGISTRATION_OPEN = False
+# # RECAPTCHA_PUBLIC_KEY = config('GOOGLE_RECAPTCHA_PUBLIC_KEY')
+# # RECAPTCHA_PRIVATE_KEY = config('GOOGLE_RECAPTCHA_PRIVATE_KEY')
+
+# # Django AllAuth Configurations
+# SOCIALACCOUNT_PROVIDERS = {
+#     'facebook': {
+#         'MESSAGE': ('Your social media account is not yet linked.'
+#                     ' Please go to your profile page and link it with us'),
+#         'SCOPE': ['email'],
+#         'OPTIONS': {'fields': ['id', 'name', 'email']},
+#         'EXCEPTION_HANDLER': lambda r: None,
+#     }
+# }
+
+# AUTHENTICATION_BACKENDS = (
+#     'social_core.backends.open_id.OpenIdAuth',  # for Google authentication
+#     'social_core.backends.google.GoogleOpenIdAuth',  # for Google authentication
+#     'social_core.backends.google.GoogleOAuth2',  # for Google Oauth2
+#     'django.contrib.auth.backends.ModelBackend',
+# )
+
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+# SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY')
+# SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET') /
+
+# SOCIAL_AUTH_PIPELINE = (
+#    'social_core.pipeline.social_auth.social_details',
+#    'social_core.pipeline.social_auth.social_uid',
+#    'social_core.pipeline.social_auth.social_user',
+#    'social_core.pipeline.user.get_username',
+#    'social_core.pipeline.user.create_user',
+#    'social_core.pipeline.user.save_user',
+#    'social_core.pipeline.social_auth.associate_user',
+#    'social_core.pipeline.social_auth.load_extra_data',
+#    'social_core.pipeline.user.user_details'
+# )
+
+# LOGIN_URL = '/login/'
+# LOGOUT_URL = '/logout/'

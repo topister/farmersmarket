@@ -284,7 +284,7 @@
                                                                                     <span class="font-xs text-muted">{{review.date|date:"d M, Y"}} </span>
                                                                                 </div>                                                                           
                                                                                 <div>
-                                                                                    {% for star in review.rating|rjust:review.rating %}
+                                                                                    {% for star in review.rating|ljust:review.rating %}
                                                                                     <i class="fa fa-star text-warning"></i>
                                                                                     {% endfor %}
                                                                                 </div>
@@ -331,6 +331,8 @@
                                                     </div>
                                                 </div>
                                                 <!--comment form-->
+                                                {% if make_review == True %}
+                                                {% if request.user.is_authenticated %}
                                                 <div class="comment-form">
                                                     <h4 class="mb-15 add-review">Add a review</h4>
                                                     <strong class="text-success" id="review-response"></strong>
@@ -363,6 +365,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% endif %}
+                                                {% endif %}
                                             </div>
                                         </div>
                                     </div>

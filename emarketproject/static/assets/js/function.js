@@ -6,8 +6,8 @@ const monthNames = ["Jan", "Feb", "Mar", "April", "May", "June",
 
 $("#commentForm").submit(function (e) {
     e.preventDefault(); // Prevents the default form submission
-    let dt = new Date();
-    let time = dt.getDay() + " " + monthNames[dt.getUTCMonth()] + ", " + dt.getFullYear()
+    let date = new Date();
+    let time = date.getDay() + " " + monthNames[date.getMonth()] + ", " + date.getFullYear()
 
     
     $.ajax({
@@ -59,7 +59,39 @@ $("#commentForm").submit(function (e) {
 
          }
 
-        })
-    
+        })  
 })            
-                        
+ 
+$(document).ready(function (){
+    $(".filter-checkbox").on('click', function(){
+        console.log("A checkbox has been clicked!");
+
+        let filter_object = {}
+        $('.filter-checkbox:checked').each(function () {
+            let filter_value = $(this).val()
+            let filter_key = $(this).data("filter") // farmer, category
+
+            // console.log("Filter value is:", filter_value);
+            // console.log("Filter key is:", filter_key);
+
+            filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function (element) {
+                return element.value
+            })
+        })
+        console.log("Filter Object is: ", filter_object);
+        $.ajax({
+            url : '/filter-products',
+            data: filter_object,
+            dataType:'json',
+            beforeSend: function () {
+                console.log("Filtering products...");
+            },
+            success: function (response) {
+                console.log(response);
+                console.log("Filtred successfully...");
+                $("#filtered-product").html(response.data);
+            }
+        })
+
+    })
+})

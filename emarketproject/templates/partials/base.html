@@ -19,8 +19,11 @@
    <link rel="stylesheet" href="{% static 'assets/css/plugins/slider-range.css' %}" />
    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
 
+   <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> -->
    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
+   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" /> -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.0.3/highlight.min.js" ></script>
 
    
@@ -199,7 +202,7 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="#">
+                            <form action="{% url 'core:search' %}" method="GET">
                                 <select class="select-active">
                                     <option>All Categories</option>
                                     <option>Milks and Dairies</option>
@@ -213,7 +216,8 @@
                                     <option>Noodles & Rice</option>
                                     <option>Ice cream</option>
                                 </select>
-                                <input type="text" placeholder="Search for items..." />
+                                <input type="text" placeholder="Search for items..." name="q" />
+                                <button class="fa fa-search" type="submit"></button>
                             </form>
                         </div>
                         <div class="header-action-right">

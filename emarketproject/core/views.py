@@ -6,6 +6,10 @@ from django.db.models import Count, Avg
 from core.forms import ProductReviewForm
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.urls import reverse
+from django.template.loader import render_to_string
 
 
 # Create your views here.
@@ -85,6 +89,15 @@ def product_detail(request, productId):
     # product review form
     review_form = ProductReviewForm()
 
+    make_review = True
+
+    if request.user.is_authenticated:  # user is logged
+        user_review_count = ProductReview.objects.filter(user=request.user, product=product).count()
+
+        if user_review_count > 0:
+            make_review = False
+
+
 
 
 
@@ -95,6 +108,8 @@ def product_detail(request, productId):
         "reviews":reviews,
         "average_rating":average_rating,
         "review_form": review_form,
+        "make_review": make_review,
+
     }
 
     return render(request,"core/product-detail.html",context)
@@ -156,14 +171,14 @@ def ajax_add_review(request, productId):
     
 
     context = {
-        "user":review.user.username,
-        "review":review.review,
-        "rating":review.rating,
+        # "user":review.user.username,
+        # "review":review.review,
+        # "rating":review.rating,
 
-        # "user":user.username,
+        "user":user.username,
 
-        # "review":request.POST['review'],
-        # "rating":request.POST['rating'],
+        "review":request.POST['review'],
+        "rating":request.POST['rating'],
 
 
     }
@@ -178,3 +193,43 @@ def ajax_add_review(request, productId):
         }
     )
 
+def search(request):
+    user_querry = request.GET.get('q')
+    products = Product.objects.filter(title__icontains=user_querry, description__icontains=user_querry).order_by("-date")
+
+    context = {
+        "user_querry":user_querry,
+        "products":products,
+    }
+
+    return render(request, 'core/search.html', context)
+
+
+def filter_products_listing(request):
+    categories = request.GET.getlist("category[]")
+    farmers = request.GET.getlist("farmer[]")
+
+
+    # min_price = request.GET['min_price']
+    # max_price = request.GET['max_price']
+
+    products = Product.objects.filter(product_status="published").order_by("-id").distinct()
+
+    # products = products.filter(price__gte=min_price)
+    # products = products.filter(price__lte=max_price)
+
+
+    if len(categories) > 0:
+        products = products.filter(category__id__in=categories).distinct() 
+    # else:
+    #     products = Product.objects.filter(product_status="published").order_by("-id").distinct()
+    if len(farmers) > 0:
+        products = products.filter(farmer__farmerId__in=farmers).distinct() 
+    # else:
+    #     products = Product.objects.filter(product_status="published").order_by("-id").distinct()    
+    
+       
+
+    
+    data = render_to_string("core/filter-products.html", {"products": products})
+    return JsonResponse({"data": data})

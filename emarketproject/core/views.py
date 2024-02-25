@@ -209,14 +209,13 @@ def filter_products_listing(request):
     categories = request.GET.getlist("category[]")
     farmers = request.GET.getlist("farmer[]")
 
-
-    # min_price = request.GET['min_price']
-    # max_price = request.GET['max_price']
+    min_price = request.GET['min_price']
+    max_price = request.GET['max_price']
 
     products = Product.objects.filter(product_status="published").order_by("-id").distinct()
 
-    # products = products.filter(price__gte=min_price)
-    # products = products.filter(price__lte=max_price)
+    products = products.filter(price__gte=min_price)
+    products = products.filter(price__lte=max_price)
 
 
     if len(categories) > 0:

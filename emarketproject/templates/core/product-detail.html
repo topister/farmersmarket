@@ -94,7 +94,7 @@
                                                     <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                                 </div> -->
                                                 
-                                                    <input type="number" value="1" name="" id="product-quantity" class="w-50 mb-20">
+                                                    <input type="number" value="1" name="" id="product-quantity" class="w-50 mb-20 product-quantity-{{ product.id }}"">
 
                                                     <div class="product-price">
                                                         <span>ksh.</span><span class="curr-prod-price-{{product.id}}">{{product.price}}</span>
@@ -106,7 +106,7 @@
                                                     <!-- <input type="hidden" class="productId" value="{{product.productId}}" name="" id="">
                                                     <input type="hidden" class="productTitle" value="{{product.title}}" name="" id=""> -->
 
-                                                    <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ product.id }}">
+                                                    <!-- <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ product.id }}"> -->
                                                     <input type="hidden" class="product-productId-{{ product.id }}" value="{{ product.productId }}">
                                                     <input type="hidden" class="product-image-{{ product.id }}" value="{{ product.image.url }}">
                                                     <input type="hidden" class="product-id-{{ product.id }}" value="{{ product.id }}">

@@ -35,5 +35,9 @@ urlpatterns = [
     path('add-to-cart/', views.add_to_cart, name="add-to-cart"),
 
 
+    # Add to cart homepage url
+    path('cart/', views.cart_view_homepage, name="cart"),
+
+
 
 ]

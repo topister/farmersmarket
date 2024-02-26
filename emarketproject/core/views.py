@@ -1,4 +1,5 @@
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
 from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
 from django.http import JsonResponse
 from taggit.models import Tag
@@ -267,6 +268,17 @@ def add_to_cart(request):
     
     return JsonResponse({"data":request.session['cart_dataObj'], "cartTotalItems":len(request.session['cart_dataObj'])})
 
-            
 
+
+def cart_view_homepage(request):
+    cart_total_amount = 0
+    if 'cart_dataObj' in request.session:
+        for product_id, item in request.session['cart_dataObj'].items():
+            cart_total_amount += int(item['quantity']) * float(item['price'])
+
+        return render(request, "core/cart.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
+    else:
+        messages.warning(request, "Cart is empty!")
+
+        return redirect("core:index")
 

@@ -109,7 +109,7 @@ class Farmer(models.Model):
     
 class Product(models.Model):
     productId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="prd", alphabet="12345abcdefghi")
-    title = models.CharField(max_length=100, default="Fresh vegetables")
+    title = models.CharField(max_length=150, default="Fresh vegetables")
     image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
     description = RichTextUploadingField(null=True, blank=True, default="This is product")
 

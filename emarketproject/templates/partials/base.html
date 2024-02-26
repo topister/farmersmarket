@@ -261,7 +261,7 @@
                                 <div class="header-action-icon-2">
                                     <a class="mini-cart-icon" href="shop-cart.html">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                        <span class="pro-count blue">2</span>
+                                        <span class="pro-count blue cartItemsCount">{{ request.session.cart_dataObj|length }}</span>
                                     </a>
                                     <a href="shop-cart.html"><span class="lable">Cart</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2">
@@ -543,7 +543,7 @@
                             <div class="header-action-icon-2">
                                 <a class="mini-cart-icon" href="shop-cart.html">
                                     <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
-                                    <span class="pro-count white">2</span>
+                                    <span class="pro-count white cartItemsCount">{{ request.session.cart_dataObj|length }}</span>
                                 </a>
                                 <div class="cart-dropdown-wrap cart-dropdown-hm2">
                                     <ul>

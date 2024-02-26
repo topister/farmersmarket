@@ -132,4 +132,135 @@ $(document).ready(function (){
 
     })
 
+    // Adding to Cart logic
+
+    // $("#add-to-cart-btn").on("click", function () {
+
+    //     let quantity = $("#product-quantity-").val()
+    //     let productTitle =  $(".productTitle-").val()
+    //     let productId = $(".product-productId-").val()
+    //     let productPrice = $(".curr-prod-price-").text()
+    //     let this_val = $(this)
+
+    //     console.log("quantity", quantity);
+    //     console.log("productTitle", productTitle);
+    //     console.log("productId", productId);
+    //     console.log("productPrice", productPrice);
+    //     console.log("this_val", this_val);
+
+    //     $.ajax({
+    //         url: '/add-to-cart',
+    //         data: {
+    //             'id': productId,
+    //             'qty': quantity,
+    //             'title': productTitle,
+    //             'price': productPrice,
+    //         },
+
+    //         dataType:'json',
+    //         beforeSend: function(){
+    //             // console.log("Wait adding product to cart...");
+
+    //         },
+    //         success: function(res){
+    //             this_val.html( "Added to cart" );
+    //             console.log("Successfuly added product to cart.");
+    //             $(".cartItemsCount").text(res.cartTotalItems)
+    //         }
+    //     })
+       
+           
+    // })
+
+     $(".add-to-cart-btn").on("click", function () {
+        let this_val = $(this)
+        let index_data = this_val.attr("data-index")
+
+        let quantity = $(".product-quantity-" + index_data).val()
+        let productTitle =  $(".product-title-" + index_data).val()
+        let productid = $(".product-id-" + index_data).val()
+        let productId = $(".product-productId-" + index_data).val()
+        let productPrice = $(".curr-prod-price-" + index_data).text()
+        let productImage = $(".product-image-" + index_data).val()
+
+        
+
+        console.log("quantity", quantity);
+        console.log("productTitle", productTitle);
+        console.log("productId", productId);
+        console.log("productPrice", productPrice);
+        console.log("productid", productid);
+        console.log("productImage", productImage);
+        console.log("index_data", index_data);
+        console.log("this_val", this_val);
+
+
+
+        $.ajax({
+            url: '/add-to-cart',
+            data: {
+                'id': productid,
+                'productId':productId,
+                'qty': quantity,
+                'title': productTitle,
+                'price': productPrice,
+                'img': productImage,
+            },
+
+            dataType:'json',
+            beforeSend: function(){
+                console.log("Wait adding product to cart...");
+
+            },
+            success: function(res){
+                this_val.html( "✔" );
+                console.log("Successfuly added product to cart.");
+                $(".cartItemsCount").text(res.cartTotalItems)
+            }
+        })
+       
+           
+    })
+
+    // $("#add-to-cart-btn").on("click", function () {
+
+    //     let quantity = $("#product-quantity").val()
+    //     let productTitle =  $(".productTitle").val()
+    //     let productId = $(".productId").val()
+    //     let productPrice = $("#curr-prod-price").text()
+    //     let this_val = $(this)
+
+    //     console.log("quantity", quantity);
+    //     console.log("productTitle", productTitle);
+    //     console.log("productId", productId);
+    //     console.log("productPrice", productPrice);
+    //     console.log("this_val", this_val);
+
+    //     $.ajax({
+    //         url: '/add-to-cart',
+    //         data: {
+    //             'id': productId,
+    //             'qty': quantity,
+    //             'title': productTitle,
+    //             'price': productPrice,
+    //         },
+
+    //         dataType:'json',
+    //         beforeSend: function(){
+    //             // console.log("Wait adding product to cart...");
+
+    //         },
+    //         success: function(res){
+    //             // this_val.html( "Added to cart" );
+    //             // console.log("Successfuly added product to cart.");
+    //             $(".cartItemsCount").text(res.cartTotalItems)
+    //         }
+    //     })
+       
+           
+    // })
+
+
 })
+
+

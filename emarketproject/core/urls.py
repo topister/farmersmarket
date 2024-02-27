@@ -38,6 +38,12 @@ urlpatterns = [
     # Add to cart homepage url
     path('cart/', views.cart_view_homepage, name="cart"),
 
+    # Delete cart item
+    path('delete-cart-item/', views.delete_cart_item, name="delete-cart-item"),
+
+
+
+
 
 
 ]

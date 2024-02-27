@@ -3,6 +3,22 @@ const monthNames = ["Jan", "Feb", "Mar", "April", "May", "June",
     "July", "Aug", "Sept", "Oct", "Nov", "Dec"
 ];
 
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Check if the cookie name matches
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 $("#commentForm").submit(function (e) {
     e.preventDefault(); // Prevents the default form submission
@@ -259,6 +275,41 @@ $(document).ready(function (){
        
            
     // })
+    
+
+    $(document).on("click", ".delete-product, .delete-item", function (e) {
+        e.preventDefault();
+
+
+        let product_id = $(this).attr("data-product")
+        let this_val = $(this)
+
+        console.log("ProductID:", product_id);
+
+        $.ajax({
+            url: "/delete-cart-item",
+            data: {
+                "id": product_id
+            },
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')  // Include a function to get the CSRF token
+            },
+            dataType: "json",
+            beforeSend: function () {
+                // this_val.attr('disabled', true);
+                this_val.hide()
+            },
+            success: function (response) {
+                // console.log(response);
+
+                this_val.show()
+                $(".cartItemsCount").text(response.cartTotalItems)
+                // this_val.attr('disabled', false);
+                $("#async-cart-list").html(response.data)
+            }
+        })
+
+    })
 
 
 })

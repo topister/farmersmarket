@@ -413,8 +413,11 @@ def paypal_failed(request):
 # General dashboard
 def dashboard(request):
     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
+    address = Address.objects.filter(user=request.user)
+
     context = {
         "orders": orders,
+        "address":address,
     }
     return render(request, 'core/dashboard.html', context)
 

@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     # Third party
     'taggit',
     'ckeditor',
+
+    # paypal payment integration
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -149,6 +152,7 @@ JAZZMIN_SETTINGS = {
 
 
 AUTH_USER_MODEL = 'userauths.User'
+LOGIN_URL = 'userauths:signIn'
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 
@@ -167,6 +171,10 @@ CKEDITOR_CONFIGS = {
 
 }
 }
+
+
+PAYPAL_RECEIVER_EMAIL = 'digifarm497@gmail.com'
+PAYPAL_TEST = True
 # CKEDITOR_CONFIGS = {
 #     'default': {
 #         'toolbar': 'Full',
@@ -230,5 +238,6 @@ CKEDITOR_CONFIGS = {
 #    'social_core.pipeline.user.user_details'
 # )
 
-# LOGIN_URL = '/login/'
+
+
 # LOGOUT_URL = '/logout/'

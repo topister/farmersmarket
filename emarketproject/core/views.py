@@ -10,6 +10,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from paypal.standard.forms import PayPalPaymentsForm
 from django.template.loader import render_to_string
 
 
@@ -322,8 +324,24 @@ def update_cart(request):
     context = render_to_string("core/async-cart-list.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
-
+@login_required
 def checkout(request):
+    host = request.get_host()
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': "200",
+        'item_name': 'Fresh Pear',
+        'invoice': 'INV-200',
+        'currency_code': 'USD',
+        'notify_url': 'http://{}{}'.format(host,reverse('core:paypal-ipn')),
+        'return_url': 'http://{}{}'.format(host,reverse('core:paypal-success')),
+        'cancel_return': 'http://{}{}'.format(host,reverse('core:paypal-fail')),
+            }
+    
+    # Form to render the paypal button
+    payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
+    print("Host is ###########3", request.get_host())
+
 
     cart_total_amount = 0
 
@@ -331,6 +349,12 @@ def checkout(request):
         for productId, item in request.session['cart_dataObj'].items():
             cart_total_amount += int(item['quantity']) * float(item['price'])
 
-        return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
+        return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form})
 
 
+def paypal_successful(request):
+    return render(request, 'core/paypal-success.html')
+
+
+def paypal_failed(request):
+    return render(request, 'core/paypal-fail.html')

@@ -8,7 +8,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 
 
 STATUS_CHOICE=(
-    ("process", "Processing"),
+    ("processing", "Processing"),
     ("shipped", "Shipped"),
     ("delivered", "Delivered"),
 )
@@ -181,7 +181,7 @@ class CartItems(models.Model):
     product_status = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
     price = models.DecimalField(max_digits=999999999, decimal_places=2, default=9.99)
 
     total = models.DecimalField(max_digits=999999999, decimal_places=2, default=9.99)
@@ -191,6 +191,10 @@ class CartItems(models.Model):
 
     def order_image(self):
         return mark_safe('<img src="/media/%s" width="50" height="50"/>' % (self.image))
+    
+    def image_category(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>' % (self.image.url))
+    
     
 # product review, wishlist, address
     

@@ -16,6 +16,7 @@ class FarmerAdmin(admin.ModelAdmin):
     list_display = ['title', 'farmer_image']
 
 class CartOrderAdmin(admin.ModelAdmin):
+    list_editable = ['product_status', 'paid_status']
     list_display = ['user', 'price', 'paid_status', 'order_date', 'product_status']
 
 

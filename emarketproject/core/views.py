@@ -326,12 +326,53 @@ def update_cart(request):
 
 @login_required
 def checkout(request):
+
+    cart_total_amount = 0
+    total = 0
+
+    # checking if cart_dataObj session still exist
+
+    if 'cart_dataObj' in request.session:
+        # loop for the total amount for paypal
+        for productId, item in request.session['cart_dataObj'].items():
+            total += int(item['quantity']) * float(item['price'])
+
+        # creating order object
+
+        order = CartOrder.objects.create(
+            user=request.user,
+            price=total
+        )
+
+        # loop for the cart total amount
+
+        for productId, item in request.session['cart_dataObj'].items():
+            cart_total_amount += int(item['quantity']) * float(item['price'])
+
+            cart_order_items = CartItems.objects.create(
+                order=order,
+                invoice_number="Invoice_NO" + str(order.id),
+                item=item['title'],
+                image=item['image'],
+                quantity=item['quantity'],
+                price=item['price'],
+                total=float(item['quantity']) * float(item['price']),
+            )
+
+
+
+
+
+
+
+
+
     host = request.get_host()
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': "200",
-        'item_name': 'Fresh Pear',
-        'invoice': 'INV-200',
+        'amount': cart_total_amount,
+        'item_name': 'Order-Item-No' + str(order.id),
+        'invoice': 'INV-NO' + str(order.id),
         'currency_code': 'USD',
         'notify_url': 'http://{}{}'.format(host,reverse('core:paypal-ipn')),
         'return_url': 'http://{}{}'.format(host,reverse('core:paypal-success')),
@@ -344,16 +385,16 @@ def checkout(request):
 
     cart_total_amount = 0
 
-    # if 'cart_dataObj' in request.session:
-    #     for productId, item in request.session['cart_dataObj'].items():
-    #         cart_total_amount += int(item['quantity']) * float(item['price'])
+    if 'cart_dataObj' in request.session:
+        for productId, item in request.session['cart_dataObj'].items():
+            cart_total_amount += int(item['quantity']) * float(item['price'])
     
 
     return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form})
 
 
 
-
+@login_required
 def paypal_successful(request):
 
     cart_total_amount = 0
@@ -364,6 +405,33 @@ def paypal_successful(request):
 
     return render(request, 'core/paypal-success.html',  {'cart_data':request.session['cart_dataObj'],'cartTotalItems':len(request.session['cart_dataObj']),'cart_total_amount':cart_total_amount})
 
-
+@login_required
 def paypal_failed(request):
     return render(request, 'core/paypal-fail.html')
+
+
+# General dashboard
+def dashboard(request):
+    orders = CartOrder.objects.filter(user=request.user).order_by('-id')
+    context = {
+        "orders": orders,
+    }
+    return render(request, 'core/dashboard.html', context)
+
+# Buyers dashboard
+def buyer_dashboard(request):
+    return render(request, 'core/buyer-dashboard.html')
+
+# Farmers/any seller dashboard
+def seller_dashboard(request):
+    return render(request, 'core/seller-dashboard.html')
+
+
+def view_order_detail(request, id):
+    order = CartOrder.objects.get(user=request.user, id=id)
+    products =  CartItems.objects.filter(order=order)
+
+    context = {
+        "products": products,
+    }
+    return render(request, 'core/order-detail.html', context)

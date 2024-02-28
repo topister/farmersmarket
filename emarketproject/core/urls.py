@@ -56,6 +56,18 @@ urlpatterns = [
     # paypal payment failed
     path('paypal-fail/', views.paypal_failed, name='paypal-fail'),
 
+    # General dashboard
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+    # buyer dashboard
+    path('buyer-dashboard/', views.buyer_dashboard, name='buyer-dashboard'),
+
+    # seller dashboard
+    path('seller-dashboard/', views.seller_dashboard, name='seller-dashboard'),
+
+    # view ordered details
+    path('dashboard/order-detail/<int:id>', views.view_order_detail, name="order-detail"),
+
 
 
 

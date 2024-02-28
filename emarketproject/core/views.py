@@ -301,7 +301,26 @@ def delete_cart_item(request):
     context = render_to_string("core/async-cart-list.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
-    
+
+
+def update_cart(request):
+    product_id = str(request.GET['id'])
+    product_qty = request.GET['quantity']
+
+    if 'cart_dataObj' in request.session:
+        if product_id in request.session['cart_dataObj']:
+            cart_data = request.session['cart_dataObj']
+            cart_data[str(request.GET['id'])]['quantity'] = product_qty
+            request.session['cart_dataObj'] = cart_data
+
+    cart_total_amount = 0
+
+    if 'cart_dataObj' in request.session:
+        for productId, item in request.session['cart_dataObj'].items():
+            cart_total_amount += int(item['quantity']) * float(item['price'])
+
+    context = render_to_string("core/async-cart-list.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
+    return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
 
 

@@ -41,6 +41,9 @@ urlpatterns = [
     # Delete cart item
     path('delete-cart-item/', views.delete_cart_item, name="delete-cart-item"),
 
+    # Update cart item
+    path('update-cart/', views.update_cart, name="update-cart"),
+
 
 
 

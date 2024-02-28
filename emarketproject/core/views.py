@@ -340,8 +340,21 @@ def checkout(request):
     
     # Form to render the paypal button
     payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
-    print("Host is ###########3", request.get_host())
 
+
+    cart_total_amount = 0
+
+    # if 'cart_dataObj' in request.session:
+    #     for productId, item in request.session['cart_dataObj'].items():
+    #         cart_total_amount += int(item['quantity']) * float(item['price'])
+    
+
+    return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form})
+
+
+
+
+def paypal_successful(request):
 
     cart_total_amount = 0
 
@@ -349,11 +362,7 @@ def checkout(request):
         for productId, item in request.session['cart_dataObj'].items():
             cart_total_amount += int(item['quantity']) * float(item['price'])
 
-        return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form})
-
-
-def paypal_successful(request):
-    return render(request, 'core/paypal-success.html')
+    return render(request, 'core/paypal-success.html',  {'cart_data':request.session['cart_dataObj'],'cartTotalItems':len(request.session['cart_dataObj']),'cart_total_amount':cart_total_amount})
 
 
 def paypal_failed(request):

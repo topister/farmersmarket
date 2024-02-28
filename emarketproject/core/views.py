@@ -323,6 +323,14 @@ def update_cart(request):
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
 
+def checkout(request):
 
+    cart_total_amount = 0
+
+    if 'cart_dataObj' in request.session:
+        for productId, item in request.session['cart_dataObj'].items():
+            cart_total_amount += int(item['quantity']) * float(item['price'])
+
+        return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
 
 

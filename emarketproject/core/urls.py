@@ -71,6 +71,19 @@ urlpatterns = [
     # make address defualt
     path('default_address/', views.default_address, name='default_address'),
 
+    # wishlist
+    # path('wishlist/', views.wishlist, name="wishlist"),
+
+    # add to wishlist
+    # path('add-wishlist/', views.add_wishlist, name="add-wishlist"),
+
+    # trial
+    path('wishlist/',views.WishlistPage, name='wishlist'),
+
+    path('add-to-wishlist/',views.add_to_wishlist, name='add-to-wishlist'),
+
+    
+
 
 
 

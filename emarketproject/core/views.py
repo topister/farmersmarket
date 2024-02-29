@@ -383,14 +383,24 @@ def checkout(request):
     payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
 
 
-    cart_total_amount = 0
+    # cart_total_amount = 0
 
-    if 'cart_dataObj' in request.session:
-        for productId, item in request.session['cart_dataObj'].items():
-            cart_total_amount += int(item['quantity']) * float(item['price'])
+    # if 'cart_dataObj' in request.session:
+    #     for productId, item in request.session['cart_dataObj'].items():
+    #         cart_total_amount += int(item['quantity']) * float(item['price'])
+
+    try:
+
+        active_address = Address.objects.get(user=request.user, status=True)
+
+    except:
+        messages.warning(request, "You have multiple addresses, activate only one!")
+        active_address = None
+
+
     
 
-    return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form})
+    return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form, 'active_address':active_address})
 
 
 
@@ -457,3 +467,11 @@ def view_order_detail(request, id):
         "products": products,
     }
     return render(request, 'core/order-detail.html', context)
+
+def default_address(request):
+    id = request.GET['id']
+    Address.objects.update(status=False)
+    Address.objects.filter(id=id).update(status=True)
+    return JsonResponse({'boolean':True})
+
+

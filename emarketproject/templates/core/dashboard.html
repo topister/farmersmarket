@@ -127,7 +127,7 @@
                                             <form class="mb-4" method="POST">
                                                 {% csrf_token %}
                                                 <div class="card-hdeader">
-                                                    <h5>Add Address</h5>
+                                                    <h5>Add address</h5>
                                                 </div>
                                                 <div class="row">
                                                     <div class="form-group col-md-6">
@@ -168,6 +168,7 @@
                                                             <p><label for="city">City:</label><span name="city"> {{addr.city}}</span></p>
                                                             <p><label for="address">Full Address:</label><span name="address"> {{addr.address}}</span></p>
                                                             <p><label for="mobile">Mobile:</label><span name="mobile"> {{addr.mobile}}</span></p>
+                                                            <!-- <p><label for="id">Id:</label><span name="id"> {{addr.id}}</span></p> -->
                                                             <!-- {% if  addr.status == True %}
                                                             <p><label for="add-status">Verified Address:</label><span name="add-status" class="text-brand"> {{addr.status}}</span></p>
 
@@ -176,9 +177,18 @@
 
                                                             {% endif %} -->
                                                         </address>
+                                                        {% if addr.status == True%}
+
+                                                        <i data-addr-id="{{addr.id}}" class="fa fa-check-circle text-success check{{addr.id}} check"></i>
+                                                        <button data-addr-id="{{addr.id}}" style="display: none;" class="btn make-default-address button{{addr.id}} action_btn">Make default</button>
+
+                                                        {% else %}
+                                                        <i data-addr-id="{{addr.id}}" style="display: none;" class="fa fa-check-circle text-success check check{{addr.id}}"></i>
                                                         
-                                                        <button class="btn">Make default</button>
-                                                        <i class="fa fa-check-circle text-success"></i>
+                                                        <button data-addr-id="{{addr.id}}" class="btn make-default-address button{{addr.id}} action_btn">Make default</button>
+                                                        
+                                                        {% endif %}
+                                                        
                                                     </div>
                                                     
                                                 </div>

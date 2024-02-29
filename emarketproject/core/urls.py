@@ -66,7 +66,10 @@ urlpatterns = [
     path('seller-dashboard/', views.seller_dashboard, name='seller-dashboard'),
 
     # view ordered details
-    path('dashboard/order-detail/<int:id>', views.view_order_detail, name="order-detail"),
+    path('dashboard/order-detail/<int:id>', views.view_order_detail, name='order-detail'),
+
+    # make address defualt
+    path('default_address/', views.default_address, name='default_address'),
 
 
 

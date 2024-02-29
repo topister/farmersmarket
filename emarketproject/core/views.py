@@ -415,6 +415,25 @@ def dashboard(request):
     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
     address = Address.objects.filter(user=request.user)
 
+    if request.method == 'POST':
+        country = request.POST.get('country')
+        city = request.POST.get('city')
+        address = request.POST.get('address')
+        mobile = request.POST.get('mobile')
+
+
+        new_address = Address.objects.create(
+            country = country,
+            city = city,
+            address = address,
+            mobile = mobile,
+            user=request.user,
+
+        )
+        messages.success(request, "Address saved successfully!")
+        return redirect('core:dashboard')
+
+
     context = {
         "orders": orders,
         "address":address,

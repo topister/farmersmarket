@@ -15,6 +15,8 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.template.loader import render_to_string
 from django.core import serializers
+import calendar
+from django.db.models.functions import ExtractMonth
 
 
 # Create your views here.
@@ -428,6 +430,17 @@ def dashboard(request):
     address = Address.objects.filter(user=request.user)
     profile = Profile.objects.get(user=request.user)
 
+    cart_orders = CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('id')).values('month', 'count')
+
+    month = []
+    total_orders = []
+
+    for order in cart_orders:
+        month.append(calendar.month_name[order['month']])
+        total_orders.append(order['count'])
+
+
+
     if request.method == 'POST':
         country = request.POST.get('country')
         city = request.POST.get('city')
@@ -441,6 +454,7 @@ def dashboard(request):
             address = address,
             mobile = mobile,
             user=request.user,
+            
 
         )
         messages.success(request, "Address saved successfully!")
@@ -451,6 +465,9 @@ def dashboard(request):
         "orders": orders,
         "address":address,
         'profile':profile,
+        'cart_orders':cart_orders,
+        'month':month,
+        'total_orders':total_orders,
     }
     return render(request, 'core/dashboard.html', context)
 

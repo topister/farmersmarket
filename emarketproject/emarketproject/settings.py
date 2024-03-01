@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # Third party
     'taggit',
+    # 'ckeditor',
     'ckeditor',
 
     # paypal payment integration

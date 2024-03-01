@@ -35,21 +35,19 @@
                             </thead>
                             <tbody>
                                 {% for w in w %}
-
-                                <!-- {{w}} -->
-                                
+                                                     
                                 <tr class="pt-30">
                                     <td class="custome-checkbox pl-30">
                                         <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
                                         <label class="form-check-label" for="exampleCheckbox1"></label>
                                     </td>
-                                    <td class="image product-thumbnail pt-40"><img src="{{w.product.image.url}}" alt="#" /></td>
+                                    <td class="image product-thumbnail pt-40"><img src="{{ w.product.image.url }}" alt="#" /></td>
                                     <td class="product-des product-name">
                                         <h6><a class="product-name mb-10" href="{% url 'core:product-detail' w.product.productId %}">{{ w.product.title|truncatechars:30 }}</a></h6>
                                         
                                     </td>
                                     <td class="price d-fdlex fs-1" data-title="Price">
-                                        <span class="text-brand">$</span><span class="text-brand current-product-price-{{ w.product.id }}">{{ w.product.price }}</span>
+                                        <span class="text-brand">$</span><span class="text-brand curr-prod-price-{{ w.product.id }}">{{ w.product.price|floatformat:0 }}</span>
                                     </td>
                                     <td class="text-center detail-info" data-title="Stock">
                                         <span class="stock-status in-stock mb-0"> {% if w.product.in_stock %} In Stock {% else %} Out of Stock {% endif %}</span>
@@ -58,16 +56,15 @@
 
 
                                         <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ w.product.id }}">
-                                        <input type="hidden" class="product-pid-{{ w.product.id }}" value="{{ w.product.pid }}">
+                                        <input type="hidden" class="product-productId-{{ w.product.id }}" value="{{ w.product.productId }}">
                                         <input type="hidden" class="product-image-{{ w.product.id }}" value="{{ w.product.image.url }}">
                                         <input type="hidden" class="product-id-{{ w.product.id }}" value="{{ w.product.id }}">
                                         <input type="hidden" class="product-title-{{ w.product.id }}" value="{{ w.product.title }}">
 
+
+
+
                                         <button class="btn btn-sm add-to-cart-btn" data-index="{{ w.product.id }}">Add to cart</button>
-                                        <!-- <button class="btn btn-sm add add-to-cart-btn" data-index="{{ w.product.id }}" id="add-to-cart-btn" style="border: none;" >Add to cart </button>
-                                        <div class="product-extra-link2">
-                                            <button type="submit" class="button button-add-to-cart">Add to cart</button>
-                                        </div> -->
 
                                     </td>
                                     <td class="action text-center" data-title="Remove">
@@ -76,7 +73,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td><p>Nothing in wishlist yet...</p></td>
+                                    <td><p>Nothing in wishlist!</p></td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

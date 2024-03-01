@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
 from django.http import JsonResponse
+from userauths.models import Profile
 from taggit.models import Tag
 from django.db.models import Count, Avg
 from core.forms import ProductReviewForm
@@ -424,6 +425,7 @@ def paypal_failed(request):
 def dashboard(request):
     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
     address = Address.objects.filter(user=request.user)
+    profile = Profile.objects.get(user=request.user)
 
     if request.method == 'POST':
         country = request.POST.get('country')
@@ -447,6 +449,7 @@ def dashboard(request):
     context = {
         "orders": orders,
         "address":address,
+        'profile':profile,
     }
     return render(request, 'core/dashboard.html', context)
 
@@ -517,7 +520,7 @@ def default_address(request):
 #         }
 #     return render(request, 'core/wishlist.html', context)
 
-def WishlistPage(request):
+def wishlist(request):
     wishlist = Wishlist.objects.all()
     context = {
         "w":wishlist
@@ -543,3 +546,5 @@ def add_to_wishlist(request):
         'bool':True
         }
     return JsonResponse(context)
+
+

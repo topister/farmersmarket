@@ -18,6 +18,7 @@
    <!-- Template CSS -->
    <link rel="stylesheet" href="{% static 'assets/css/plugins/slider-range.css' %}" />
    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
+   <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
    <link rel="stylesheet" href="{% static 'assets/css/product-list.css' %}" />
 
 
@@ -135,8 +136,8 @@
             <div class="container">
                 <div class="header-wrap">
                     <div class="logo logo-width-1">
-                        <!-- <a href="index.html"><img src="{% static 'assets/imgs/logo/finelogo.svg' %}" alt="logo" style="height: 100px; width:100px;" /></a> -->
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/download.svg' %}" alt="logo" /></a>
+                        <a href="index.html"><img src="{% static 'assets/imgs/more/logotest4.svg' %}" alt="logo" /></a>
+
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
@@ -243,7 +244,8 @@
             <div class="container">
                 <div class="header-wrap header-space-between position-relative">
                     <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                        <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/more/logotest4.svg' %}" alt="logo" /></a>
+
                     </div>
                     <div class="header-nav d-none d-lg-flex">
                         
@@ -514,7 +516,8 @@
         <div class="mobile-header-wrapper-inner">
             <div class="mobile-header-top">
                 <div class="mobile-header-logo">
-                    <a href="index.html"><img src="{% static 'assets/imgs/theme/logo.svg' %}" alt="logo" /></a>
+                    <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/more/logotest4.svg' %}" alt="logo" /></a>
+
                 </div>
                 <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
                     <button class="close-style search-close">
@@ -799,7 +802,8 @@
                 <div class="col">
                     <div class="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0">
                         <div class="logo mb-30">
-                            <a href="index.html" class="mb-15"><img src="{% static 'assets/imgs/theme/download.svg' %}" alt="logo" /></a>
+                            <a href="{% url 'core:index' %}"><img src="{% static 'assets/imgs/more/logotest4.svg' %}" alt="logo" /></a>
+
                         </div>
                         <ul class="contact-infor">
                             <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>Busia, Kenya</span></li>

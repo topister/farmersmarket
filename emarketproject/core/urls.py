@@ -82,6 +82,10 @@ urlpatterns = [
 
     path('add-to-wishlist/',views.add_to_wishlist, name='add-to-wishlist'),
 
+
+    # Removing products from wishlist
+    path('wishlist-remove/',views.wishlist_remove, name='wishlist-remove'),
+
     
 
 

@@ -14,6 +14,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.template.loader import render_to_string
+from django.core import serializers
 
 
 # Create your views here.
@@ -548,3 +549,20 @@ def add_to_wishlist(request):
     return JsonResponse(context)
 
 
+
+def wishlist_remove(request):
+    wishlist_id = request.GET['id']
+    wishlist = Wishlist.objects.filter(user=request.user)
+    product  = Wishlist.objects.get(id=wishlist_id)
+    product.delete()
+
+    context = {
+        'bool': True,
+        'w':wishlist,
+
+    }
+
+    wishlist_json = serializers.serialize('json', wishlist)
+
+    data = render_to_string('core/wishlist-items.html', context)
+    return JsonResponse({'data':data, 'w': wishlist_json})

@@ -1,7 +1,5 @@
 
-{% extends 'partials/base.html' %}
-{% load static %}
-{% block content %}
+
     <main class="main" id="wishlist-list">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
@@ -68,8 +66,7 @@
 
                                     </td>
                                     <td class="action text-center" data-title="Remove">
-                                        <button style="border: none; background: none;" data-wishlist-product="{{ w.id }}" class="text-body delete-wishlist-product"><i class="fi-rs-trash"></i></button>
-                                        <!-- <button style="border: none; background: none;" data-wishlist-product="{{ w.id }}"  class="text-body delete-wishlist-product"><i class="fi-rs-trash"></i></button> -->
+                                        <button style="border: none; background: none;" data-wishlist-product="{{ w.id }}"  class="text-body delete-wishlist-product"><i class="fi-rs-trash"></i></button>
                                     </td>
                                 </tr>
                                 {% empty %}
@@ -84,5 +81,4 @@
             </div>
         </div>
     </main>
-{% endblock content %}
     

@@ -1,10 +1,11 @@
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from userauths.forms import SignUpForm
+from userauths.forms import SignUpForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.conf import settings
 from django.contrib.auth import logout
-from userauths.models import User
+from userauths.models import User, Profile
 
 # User = settings.AUTH_USER_MODEL
 
@@ -72,3 +73,52 @@ def logoutView(request):
     messages.success(request, "You logged out")
 
     return redirect("userauths:signIn")
+
+
+# def profile_edit(request):
+#     profile = Profile.objects.get(user=request.user)
+#     if request.method == "POST":
+#         form = ProfileForm(request.POST, request.FILES, instance=profile) 
+#         if form.is_valid():
+#             profile_save = form.save(commit=False)
+#             profile_save.user = request.user
+#             profile_save.save()
+#             messages.success(request, "Profile updated successfully!")
+#             return redirect('core:dashboard')
+#     else:
+#         form = ProfileForm(instance=profile)
+#     context = {
+#          'form':form,
+#          'profile':profile,
+#      }
+#     return render(request, 'userauths/profile_edit.html', context)
+
+
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_edit(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        # Handle the case where the profile does not exist for the user
+        # You might want to create a new profile or redirect to a profile creation page
+        return HttpResponse("Profile does not exist for this user.")
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile) 
+        if form.is_valid():
+            profile_save = form.save(commit=False)
+            profile_save.user = request.user
+            profile_save.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('core:dashboard')
+    else:
+        form = ProfileForm(instance=profile)
+    
+    context = {
+         'form': form,
+         'profile': profile,
+    }
+    return render(request, 'userauths/profile_edit.html', context)

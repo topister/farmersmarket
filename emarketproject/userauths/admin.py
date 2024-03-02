@@ -5,7 +5,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ["username",  "email", "bio"]
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ["fullname",  "bio", "phone"]
+    list_display = ["user", "fullname",  "bio", "phone"]
 
 
 # Register your models here.

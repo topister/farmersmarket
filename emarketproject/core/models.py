@@ -257,5 +257,7 @@ class ContactUs(models.Model):
         verbose_name = "Contact Us"
         verbose_name_plural = "Contact Us"
 
+    
     def __str__(self):
         return self.fullname
+        

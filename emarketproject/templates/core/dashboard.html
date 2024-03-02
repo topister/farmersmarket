@@ -49,15 +49,25 @@
                                 <div class="tab-content account dashboard-content pl-50">
                                     <div class="tab-pane fade active show" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                         <div class="card">
+                                           
                                             <div class="card-header border-bottom">
                                                 <h3 class="mb-0">My profile</h3>
                                             </div>
+                                            
                                             <div class="card-body mb-2" style="display: flex; align-items: center; gap: 10px;">
                                                 <div>
+                                                    {% if profile.image %}
                                                     <span><img src="{{profile.image.url}}" alt="User Profile" style="height: 150px; width: 150px; object-fit: cover; border-radius: 50%;"></span>
+
+                                                    {% else %}
+
+                                                    <span><img src="https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg" alt="User Profile" style="height: 150px; width: 150px; object-fit: cover; border-radius: 50%;"></span>
+
+                                                    {% endif %}
+
                                                 </div>
                                                 <div style="width: 500px;">
-                                                    <label for="name" class="text-heading" style="font-size: medium;">FullName:</label>
+                                                <label for="name" class="text-heading" style="font-size: medium;">FullName:</label>
                                                 <input type="text" name="name" value="{{profile.fullname|title}}">
                                                 <label for="bio" class="text-heading" style="font-size: medium;">Bio:</label>
                                                 <input type="text" name="bio" value="{{profile.bio}}">
@@ -78,7 +88,7 @@
                                                 {% endif %}
 
                                                 <div class="p-4 border rounded mb-4" style="border: none;">
-                                                    <button class="btn btn-success">Edit profile</button>
+                                                    <a href="{% url 'userauths:profile-edit' %}" class="btn btn-success" style="color: white;">Edit profile</a>
                                                 </div>
                                                 </div>
 

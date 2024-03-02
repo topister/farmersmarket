@@ -2,68 +2,60 @@
 {% load static %}
 {% block content %}
 
-<main class="main pages">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                <span></span> Pages <span></span> My Account
+    <main class="main pages">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> Pages <span></span> My Account
+                </div>
             </div>
         </div>
-    </div>
-    <div class="page-content pt-150 pb-150">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
-                    <div class="row">
-                        <div class="col-lg-6 pr-30 d-none d-lg-block">
-                            <img class="border-radius-15" src="{% static 'assets/imgs/logo/login2.jpeg' %}" alt="" />
-                        </div>
-                        <div class="col-lg-6 col-md-8">
-                            <div class="login_wrap widget-taber-content background-white">
-                                <div class="padding_eight_all bg-white">
-                                    <div class="heading_s1 text-center mb-5">
-                                        <h1 class="mb-5">Login</h1>
-                                        <!-- <p class="mb-30">Don't have an account? <a href="page-register.html">Create here</a></p> -->
-                                    </div>
+        <div class="page-content pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-8 col-lg-10 col-md-12 m-auto">
+                        <div class="row">
+                            <div class="col-lg-6 pr-30 d-none d-lg-block ">
+                                <img class="border-radius-15" src="{% static 'assets/imgs/page/login-1.png' %}" alt="" />
+                            </div>
+                            <div class="col-lg-6 col-md-12">
+                                <div class="login_wrap widget-taber-content background-white">
+                                    <div class="padding_eight_all bg-white">
+                                        <div class="heading_s1">
+                                            <h5 class="text-center">Login</h5>
+                                        </div>
+                                        <form method="POST"> 
+                                            {% csrf_token %}
 
-                                    
-                                    
-                                    <form method="POST">
-                                        {% csrf_token %}
-                                        <div class="form-group">
-                                            <input type="text" required name="email" placeholder="Username or Email *" />
-                                        </div>
-                                        <div class="form-group">
-                                            <input required type="password" name="password" placeholder="Your password *" />
-                                        </div>
-                                        <!-- <div class="login_footer form-group">
-                                            <div class="chek-form">
-                                                <input type="text" required="" name="email" placeholder="Security code *" />
+                                            <div class="form-group" style="margin: 20px;">
+                                                <!-- <div style="margin: 20px;"> -->
+                                                    <label for="email" class="text-heading" style="font-size:medium;">Email Address:</label>
+                                                    <input type="text" style="height: 50px;" required name="email" placeholder="Username or Email *" />
+                                                <!-- </div> -->
                                             </div>
-                                            <span class="security-code">
-                                                <b class="text-new">8</b>
-                                                <b class="text-hot">6</b>
-                                                <b class="text-sale">7</b>
-                                                <b class="text-best">5</b>
-                                            </span>
-                                        </div> -->
-                                        <div class="login_footer form-group mb-50">
-                                            <div class="chek-form">
-                                                <div class="custome-checkbox">
-                                                    <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                                    <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                                            <div class="form-group" style="margin: 20px;">
+                                                <label for="password" class="text-heading" style="font-size:medium;">Password:</label>
+                                                
+                                                <input required type="password" style="height: 50px;" name="password" placeholder="Your password *" />
+                                            </div>
+                                            
+                                            <div class="login_footer form-group" style="margin: 20px;">
+                                                <div class="chek-form">
+                                                    <div class="custome-checkbox">
+                                                        <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
+                                                        <label class="form-check-label" for="exampleCheckbox1"><span>Remember me</span></label>
+                                                    </div>
                                                 </div>
+                                                <a class="text-muted" style="margin-right: 50px;" href="#">Forgot password?</a>
                                             </div>
-                                            <a class="text-muted" href="#">Forgot password?</a>
-                                        </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-heading btn-block hover-up" name="login">Log in</button>
-                                        </div>
-                                        <div>
-                                            <p class="mb-30">Don't have an account? <a href="{% url 'userauths:signUp' %}">Create here</a></p>
-                                        </div>
-                                    </form>
+                                            <p class="mb-30 text-center">Don't have an account? <a href="{% url 'userauths:signUp' %}">Create here</a></p>
+
+                                            <div class="form-group" style="margin-left: 20px;">
+                                                <button type="submit" style="margin-bottom: 20px;"  class="btn btn-heading btn-block hover-up" name="login">Log in</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +63,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
 {% endblock content %}

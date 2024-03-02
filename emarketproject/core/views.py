@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from django.core import serializers
 import calendar
 from django.db.models.functions import ExtractMonth
+from django.db.models.signals import post_save
 
 
 # Create your views here.
@@ -425,10 +426,28 @@ def paypal_failed(request):
 
 
 # General dashboard
+
+
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.db.models.functions import ExtractMonth
+from django.db.models import Count
+import calendar
+
+@login_required
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return HttpResponse("User not authenticated.")
+
     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
     address = Address.objects.filter(user=request.user)
-    profile = Profile.objects.get(user=request.user)
+    
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        # Handle the case where the profile does not exist for the user
+        # You might want to create a new profile or redirect to a profile creation page
+        return HttpResponse("Profile does not exist for this user.")
 
     cart_orders = CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('id')).values('month', 'count')
 
@@ -439,37 +458,82 @@ def dashboard(request):
         month.append(calendar.month_name[order['month']])
         total_orders.append(order['count'])
 
-
-
     if request.method == 'POST':
         country = request.POST.get('country')
         city = request.POST.get('city')
         address = request.POST.get('address')
         mobile = request.POST.get('mobile')
 
-
         new_address = Address.objects.create(
-            country = country,
-            city = city,
-            address = address,
-            mobile = mobile,
+            country=country,
+            city=city,
+            address=address,
+            mobile=mobile,
             user=request.user,
-            
-
         )
         messages.success(request, "Address saved successfully!")
         return redirect('core:dashboard')
-
+    else:
+        # Handle other cases if needed
+        pass
 
     context = {
         "orders": orders,
-        "address":address,
-        'profile':profile,
-        'cart_orders':cart_orders,
-        'month':month,
-        'total_orders':total_orders,
+        "address": address,
+        'profile': profile,
+        'cart_orders': cart_orders,
+        'month': month,
+        'total_orders': total_orders,
     }
     return render(request, 'core/dashboard.html', context)
+
+# def dashboard(request):
+#     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
+#     address = Address.objects.filter(user=request.user)
+#     profile = Profile.objects.get(user=request.user)
+
+#     cart_orders = CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('id')).values('month', 'count')
+
+#     month = []
+#     total_orders = []
+
+#     for order in cart_orders:
+#         month.append(calendar.month_name[order['month']])
+#         total_orders.append(order['count'])
+
+
+
+#     if request.method == 'POST':
+#         country = request.POST.get('country')
+#         city = request.POST.get('city')
+#         address = request.POST.get('address')
+#         mobile = request.POST.get('mobile')
+
+
+#         new_address = Address.objects.create(
+#             country = country,
+#             city = city,
+#             address = address,
+#             mobile = mobile,
+#             user=request.user,
+            
+
+#         )
+#         messages.success(request, "Address saved successfully!")
+#         return redirect('core:dashboard')
+#     else:('Error')
+
+
+#     context = {
+#         "orders": orders,
+#         "address":address,
+#         'profile':profile,
+#         'cart_orders':cart_orders,
+#         'month':month,
+#         'total_orders':total_orders,
+        
+#     }
+#     return render(request, 'core/dashboard.html', context)
 
 # Buyers dashboard
 def buyer_dashboard(request):

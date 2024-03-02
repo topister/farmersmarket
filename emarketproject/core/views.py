@@ -496,48 +496,8 @@ def default_address(request):
     return JsonResponse({'boolean':True})
 
 
-# # wishlist
-# def wishlist(request):
-#     wishlist = Wishlist.objects.all()
-#     context = {
-#         'wishlist':wishlist
-#     }
 
-#     return render(request, 'core:wishlist.html', context)
-
-# @login_required
-# def add_wishlist(request):
-#     id = request.GET['id']
-#     product = Product.objects.get(id=id)
-#     context = {}
-#     wishlist_count = Wishlist.objects.filter(product=product, user=request.user).count()
-#     print(wishlist_count)
-#     if wishlist_count > 0:
-#         context = {
-#             'bool': False,
-#         }
-#     else:
-#         new_wishlist = Wishlist.objects.create(
-#             product=product,
-#             user=request.user,
-#         )
-#         context = {
-#             'bool': True
-#         }
-#     return  JsonResponse(context)
-
-# def WishlistPage(request):
-#     context = {}
-    
-#     try:
-#         wishlist = Wishlist.objects.filter(user=request.user)
-#     except:
-#         wishlist = None
-#         context = {
-#         "w": wishlist
-#         }
-#     return render(request, 'core/wishlist.html', context)
-
+@login_required
 def wishlist(request):
     wishlist = Wishlist.objects.all()
     context = {
@@ -545,7 +505,7 @@ def wishlist(request):
     }
     return render(request, "core/wishlist.html", context)
 
-
+@login_required
 def add_to_wishlist(request):
     product_id = request.GET['product_id']
     product = Product.objects.get(id=product_id)
@@ -566,7 +526,7 @@ def add_to_wishlist(request):
     return JsonResponse(context)
 
 
-
+@login_required
 def wishlist_remove(request):
     wishlist_id = request.GET['id']
     wishlist = Wishlist.objects.filter(user=request.user)
@@ -583,3 +543,6 @@ def wishlist_remove(request):
 
     data = render_to_string('core/wishlist-items.html', context)
     return JsonResponse({'data':data, 'w': wishlist_json})
+
+
+

@@ -74,8 +74,8 @@
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
                                                     <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                        <img class="default-img" src="{{prod.image.url}}" alt="product image" />
-                                                        <img class="hover-img" src="{{prod.image.url}}" alt="product image" />
+                                                        <img class="default-img" src="{% static '{{prod.image.url}}' %}" alt="product image" />
+                                                        <img class="hover-img" src="{% static '{{prod.image.url}}' %}" alt="product image" />
                                                     </a>
                                                 </div>
                                                 <div class="product-action-1">
@@ -155,7 +155,7 @@
                                     <div class="product-img-action-wrap">
                                         <div class="product-img">
                                             <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                <img src="assets/imgs/banner/banner-5.png" alt="" />
+                                                <img src="{% static 'assets/imgs/banner/banner-5.png' %}" alt="" />
                                             </a>
                                         </div>
                                     </div>
@@ -192,7 +192,7 @@
                                     <div class="product-img-action-wrap">
                                         <div class="product-img">
                                             <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                <img src="assets/imgs/banner/banner-6.png" alt="" />
+                                                <img src="{% static 'assets/imgs/banner/banner-6.png' %}" alt="" />
                                             </a>
                                         </div>
                                     </div>
@@ -229,7 +229,7 @@
                                     <div class="product-img-action-wrap">
                                         <div class="product-img">
                                             <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                <img src="assets/imgs/banner/banner-7.png" alt="" />
+                                                <img src="{% static 'assets/imgs/banner/banner-7.png' %}" alt="" />
                                             </a>
                                         </div>
                                     </div>
@@ -266,7 +266,7 @@
                                     <div class="product-img-action-wrap">
                                         <div class="product-img">
                                             <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                <img src="assets/imgs/banner/banner-8.png" alt="" />
+                                                <img src="{% static 'assets/imgs/banner/banner-8.png' %}" alt="" />
                                             </a>
                                         </div>
                                     </div>

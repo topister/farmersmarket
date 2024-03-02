@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
+from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
 from django.http import JsonResponse
 from userauths.models import Profile
 from taggit.models import Tag
@@ -544,5 +544,32 @@ def wishlist_remove(request):
     data = render_to_string('core/wishlist-items.html', context)
     return JsonResponse({'data':data, 'w': wishlist_json})
 
+def contact(request):
+    return render(request, 'core/contactUs.html')
+
+def contact_ajax(request):
+    fullname = request.GET['fullname']
+    email = request.GET['email']
+    phone = request.GET['phone']
+    message = request.GET['message']
+    subject = request.GET['subject']
 
 
+    contact = ContactUs.objects.create(
+        fullname = fullname,
+        email = email,
+        phone = phone,
+        message = message,
+        subject = subject,
+
+
+    )
+
+    context = {
+        'bool':True,
+        'message':'Message sent successfully',
+
+    }
+
+
+    return JsonResponse({'context': context})

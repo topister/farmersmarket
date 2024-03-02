@@ -345,6 +345,46 @@ $(document).ready(function (){
             })
         })
 
+        $(document).on('submit', '#contact-form-ajax', function(e){
+            e.preventDefault();
+            console.log('Form Submitted');
+
+            let fullname = $('#fullname').val()
+            let email = $('#email').val()
+            let phone = $('#phone').val()
+            let subject = $('#subject').val()
+            let message = $('#message').val()
+
+            console.log('fullname', fullname);
+            console.log('email', email);
+            console.log('phone', phone);
+            console.log('subject', subject);
+            console.log('message', message);
+
+
+            $.ajax({
+                url:'/ajax-contact-form',
+                data:{
+                    'fullname':fullname,
+                    'email':email,
+                    'phone':phone,
+                    'subject':subject,
+                    'message':message,
+                }, 
+                dataType:'json',
+                beforeSend: function(){
+                    console.log('Sending data to the server...');
+                }, 
+                success: function(res){
+
+                    console.log('Data sent to server');
+                    $('#contact-form-ajax').hide()
+                    $('#message-response').html('Message sent successfully!')
+
+                }
+            })
+        })
+
 
 
 

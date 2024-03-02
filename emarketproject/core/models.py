@@ -246,3 +246,16 @@ class Address(models.Model):
         verbose_name_plural = "Address"
 
    
+class ContactUs(models.Model):
+    fullname = models.CharField(max_length=150)
+    email = models.CharField(max_length=150)
+    phone = models.CharField(max_length=100)
+    subject = models.CharField(max_length=150)
+    message = models.TextField()
+
+    class Meta:
+        verbose_name = "Contact Us"
+        verbose_name_plural = "Contact Us"
+
+    def __str__(self):
+        return self.fullname

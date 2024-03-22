@@ -1,3 +1,10 @@
+// Remove empty <p> tags
+document.querySelectorAll('.vendor-des p').forEach(p => {
+    if (p.innerHTML.trim() === '') {
+        p.remove();
+    }
+});
+
 console.log("Working fine");
 const monthNames = ["Jan", "Feb", "Mar", "April", "May", "June",
     "July", "Aug", "Sept", "Oct", "Nov", "Dec"
@@ -193,6 +200,7 @@ $(document).ready(function (){
                 this_val.html( "✔" );
                 console.log("Successfuly added product to cart.");
                 $(".cartItemsCount").text(res.cartTotalItems)
+                console.log(productPrice);
             }
         })
        

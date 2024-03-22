@@ -5,6 +5,7 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.index, name="index"),
+    path("ckeditor/", include("ckeditor_uploader.urls")), #For CKEditor5
 
     # products
 
@@ -18,6 +19,11 @@ urlpatterns = [
     # farmers
     path('farmers/', views.farmer_list, name='farmer-list'),
     path('farmer/<farmerId>', views.farmer_details, name= "farmer-detail" ),
+
+    # experts
+    path('experts/', views.expert_list, name='expert-list'),
+    path('expert/<expertId>', views.expert_details, name= "expert-detail" ),
+
 
     # tags
     path("products/tags/<slug:tag_slug>/",views.tag_list , name="tag-list"),
@@ -90,10 +96,30 @@ urlpatterns = [
     path('contact/', views.contact, name="contact"),
     path('ajax-contact-form/', views.contact_ajax, name="ajax-contact-form"),
 
-    
+    # About us page
+    path("about-us/", views.about_us, name="about-us"),
+    path("purchase_guide/", views.purchase_guide, name="purchase_guide"),
+    path("privacy_policy/", views.privacy_policy, name="privacy_policy"),
+    path("terms_of_service/", views.terms_of_service, name="terms_of_service"),
 
 
-
+    # Project part
+    path('projects/', views.home_view, name='home'),
+    path('jobs/', views.job_list_View, name='job-list'),
+    path('job/create/', views.create_job_View, name='create-job'),
+    path('job/<int:id>/', views.single_job_view, name='single-job'),
+    path('apply-job/<int:id>/', views.apply_job_view, name='apply-job'),
+    path('bookmark-job/<int:id>/', views.job_bookmark_view, name='bookmark-job'),
+    path('about/', views.single_job_view, name='about'),
+    path('contact/', views.single_job_view, name='contact'),
+    path('result/', views.search_result_view, name='search_result'),
+    path('project-dashboard/', views.dashboard_view, name='project-dashboard'),
+    path('dashboard/employer/job/<int:id>/applicants/', views.all_applicants_view, name='applicants'),
+    path('dashboard/employer/job/edit/<int:id>', views.job_edit_view, name='edit-job'),
+    path('dashboard/employer/applicant/<int:id>/', views.applicant_details_view, name='applicant-details'),
+    path('dashboard/employer/close/<int:id>/', views.make_complete_job_view, name='complete'),
+    path('dashboard/employer/delete/<int:id>/', views.delete_job_view, name='delete'),
+    path('dashboard/employee/delete-bookmark/<int:id>/', views.delete_bookmark_view, name='delete-bookmark'),
 
 
 

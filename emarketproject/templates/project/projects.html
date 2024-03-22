@@ -1,0 +1,31 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="container my-4">
+    <div class="row">
+        {% for project in projects reversed %}
+        <div class="col-sm-4">
+            <div class="card my-4 mx-3 shadow-lg p-3 mb-5 bg-white rounded" style="width: 18rem;">
+                <img src="{{ project.thumbnail_url.url }}" class="card-img-top" alt="Project Thumbnail" height="150">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><img src="https://img.icons8.com/android/20/000000/time.png" />
+                        {{ project.project_length }}</li>
+                    <li class="list-group-item"><img src="https://img.icons8.com/metro/20/000000/price-tag-euro.png" />
+                        {% if project.project_type == "PAID" %}$ {{ project.project_price }} /-{% else %}{{ project.project_type }}{% endif %}</li>
+                </ul>
+                <div class="card-body">
+                    <center>
+                        <a href="{% url 'core:project_detail' project.project_slug %}" class="btn btn-info py-2 my-1">View Project Details</a>
+                    </center>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

@@ -1,4 +1,4 @@
-from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
+from core.models import Product, Category, Farmer, Expert,CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages
 from django.db.models import Min, Max, Count
 from django.contrib import messages
 
@@ -6,6 +6,7 @@ from django.contrib import messages
 def default(request):
     categories = Category.objects.all()
     farmers = Farmer.objects.all()
+    experts = Expert.objects.all()
     min_max_price = Product.objects.aggregate(Min("price"), Max("price"))
 
 
@@ -31,6 +32,7 @@ def default(request):
         'categories': categories,
         'address':address,
         'farmers':farmers,
+        'experts':experts,
         "min_max_price": min_max_price,
         'wishlist':wishlist,
         }

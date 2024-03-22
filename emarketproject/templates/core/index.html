@@ -42,27 +42,14 @@
                             <h3>Popular Products</h3>
                             <ul class="nav nav-tabs links" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">All</button>
+                                    <a href="{% url 'core:category-list' %}">All</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-two" data-bs-toggle="tab" data-bs-target="#tab-two" type="button" role="tab" aria-controls="tab-two" aria-selected="false">Milks & Dairies</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-three" data-bs-toggle="tab" data-bs-target="#tab-three" type="button" role="tab" aria-controls="tab-three" aria-selected="false">Coffes & Teas</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-four" data-bs-toggle="tab" data-bs-target="#tab-four" type="button" role="tab" aria-controls="tab-four" aria-selected="false">Pet Foods</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-five" data-bs-toggle="tab" data-bs-target="#tab-five" type="button" role="tab" aria-controls="tab-five" aria-selected="false">Meats</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-six" data-bs-toggle="tab" data-bs-target="#tab-six" type="button" role="tab" aria-controls="tab-six" aria-selected="false">Vegetables</button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" id="nav-tab-seven" data-bs-toggle="tab" data-bs-target="#tab-seven" type="button" role="tab" aria-controls="tab-seven" aria-selected="false">Fruits</button>
-                                </li>
-                            </ul>
+                                    {% for category in categories %}
+                                    <li style="margin-left: 20px; color: black;"><a href="{% url 'core:product-list-category' category.categoryId %}">{{category.title}}</a></li>
+                                    {% endfor %}
+                                </li>                               
+                            </ul>                            
                         </div>
                         <!--End nav-tabs-->
                         <div class="tab-content" id="myTabContent">
@@ -80,7 +67,7 @@
                                                 </div>
                                                 <div class="product-action-1">
                                                     <a aria-label="Add To Wishlist" class="action-btn" href="{% url 'core:wishlist' %}"><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                    <!-- <a aria-label="Compare" class="action-btn" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a> -->
                                                     <a class="action-btn" href="{% url 'core:product-detail' prod.productId %}"><i class="fi-rs-eye"></i></a>
                                                 </div>
                                                 <div class="product-badges product-badges-position product-badges-mrg">
@@ -2997,7 +2984,7 @@
                     <!--End banners-->
                 </div>
                 <div class="col-lg-1-5 primary-sidebar sticky-sidebar pt-30">
-                    <div class="sidebar-widget widget-category-2 mb-30">
+                    <!-- <div class="sidebar-widget widget-category-2 mb-30">
                         <h5 class="section-title style-1 mb-30">Category</h5>
                         <ul>
                             <li>
@@ -3016,10 +3003,12 @@
                                 <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Fresh Fruit</a><span class="count">87</span>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                     <!-- Fillter By Price -->
+
+                    
                     <div class="sidebar-widget price_range range mb-30">
-                        <h5 class="section-title style-1 mb-30">Fill by price</h5>
+                        <h5 class="section-title style-1 mb-30">Filter by price</h5>
                         <div class="price-filter">
                             <div class="price-filter-inner">
                                 <div id="slider-range" class="mb-20"></div>
@@ -3029,7 +3018,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="list-group">
+                        <!-- <div class="list-group">
                             <div class="list-group-item mb-10 mt-10">
                                 <label class="fw-900">Color</label>
                                 <div class="custome-checkbox">
@@ -3054,7 +3043,7 @@
                                     <label class="form-check-label" for="exampleCheckbox31"><span>Used (45)</span></label>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <a href="shop-grid-right.html" class="btn btn-sm btn-default"><i class="fi-rs-filter mr-5"></i> Fillter</a>
                     </div>
                     <!-- Product sidebar Widget -->

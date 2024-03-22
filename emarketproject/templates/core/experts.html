@@ -1,0 +1,32 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="container my-4">
+    <div class="row">
+        {% for expert in experts %}
+        <div class="col-sm-4">
+            <div class="card my-4 mx-3 shadow-lg p-3 mb-5 bg-white rounded" style="width: 18rem;">
+                <img src="{{ expert.thumbnail_url }}" class="card-img-top" alt="Course Thumbnail" height="150">
+                <div class="card-body">
+                    <h5 class="card-title">{{ expert.title }}</h5>
+                </div>
+                <!-- <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><img src="https://img.icons8.com/android/20/000000/time.png" />
+                        {{ expert.expert_length }}</li>
+                    <li class="list-group-item"><img src="https://img.icons8.com/metro/20/000000/price-tag-euro.png" />
+                        {% if expert.expert_type == "PAID" %}₹ {{ course.course_price }} /-{% else %}{{ course.course_type }}{% endif %}</li>
+                </ul> -->
+                <div class="card-body">
+                    <center>
+                        <a href="{% url 'expert_detail' expert.expert_slug %}" class="btn btn-info py-2 my-1">View Expert Details</a>
+                    </center>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

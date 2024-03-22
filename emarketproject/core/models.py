@@ -1,3 +1,5 @@
+from datetime import timedelta, timezone
+from django.conf import settings
 from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 from django.utils.safestring import mark_safe
@@ -5,12 +7,49 @@ from userauths.models import User
 import uuid
 from taggit.managers import TaggableManager
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.db import models
+from django.contrib.auth.models import User
+import uuid
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from ckeditor.fields import RichTextField
+
+from django_ckeditor_5.fields import CKEditor5Field
+
+import string, random
+from django.utils.text import slugify
+
+from django.db import models
+from django.utils.text import slugify
+# from django.contrib.auth.models import User
+from django.utils.timezone import now
+import string, random
+
+from django.utils import timezone
+from datetime import *
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
+def get_random_string(lenght):
+    letter = string.ascii_letters
+    return ''.join(random.choice(letter) for i in range(lenght))
 
 
 STATUS_CHOICE=(
     ("processing", "Processing"),
     ("shipped", "Shipped"),
     ("delivered", "Delivered"),
+)
+
+EXPERTS_CHOICE = (
+    ("agri_expert", "Agri Expert"),
+    ("soil_scientist", "Soil Scientist"),
+    ("agricultural_consultant", "Agricultural consultant"),
+    ("agricultural_economist", "Agricultural economist"),
+    ("precision_agriculture", "Precision agriculture"),
+    ("farm_automation", "Farm automation"),
+    ("smart_agriculture", "Smart agriculture"),
 )
 
 STATUS=(
@@ -27,6 +66,11 @@ RATING=(
     (4, "★★★★☆"),
     (5, "★★★★★"),
 )
+
+PROJECT_TYPE = [
+    ("FREE","FREE"),
+    ("PAID","PAID"),
+]
 
 def user_directory_path(instance, filename):
     
@@ -75,8 +119,6 @@ class Category(models.Model):
     def __str__(self):
         return self.title
     
-class Tags(models.Model):
-    pass
 
 class Farmer(models.Model):
     farmerId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="farm", alphabet="12345abcdefghi")
@@ -85,7 +127,9 @@ class Farmer(models.Model):
     image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
     cover_image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
     # description = models.TextField(null=True, blank=True, default="I am a great farmer")
-    description = RichTextUploadingField(null=True, blank=True, default="I am a great farmer")
+    # description = RichTextUploadingField(null=True, blank=True, default="I am a great farmer")
+    description = CKEditor5Field('Description', config_name='extends', null=True, blank=True)
+
 
     address = models.CharField(max_length=100, default="Busia, Kenya")
     contact = models.CharField(max_length=100, default="+254740298531")
@@ -94,6 +138,10 @@ class Farmer(models.Model):
     authentic_rating = models.CharField(max_length=100, default="98")
     days_return = models.CharField(max_length=100, default="7")
     warranty_period = models.CharField(max_length=100, default="4")
+    twitter = models.URLField(max_length=500, null=True, blank=True)
+    facebook = models.URLField(max_length=500, null=True, blank=True)
+    instagram = models.URLField(max_length=500, null=True, blank=True)
+    pinterest = models.URLField(max_length=500, null=True, blank=True)
     # Whenever the farmer is deleted his/her shop is not deleted
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
@@ -106,12 +154,55 @@ class Farmer(models.Model):
     
     def __str__(self):
         return self.title
+
+
+class Expert(models.Model):
+    expertId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="expert", alphabet="12345abcdefghi")
+    # title = models.CharField(max_length=100, default="Agriculture Specialist")
+
+    title = models.CharField('Full Name', max_length=100)
+    profession = models.CharField('Profession', max_length=100)
+    # text=CKEditor5Field('Text', config_name='extends')
+
+
+
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    image = models.ImageField(upload_to=user_directory_path, default="expert.jpg")
+    # cover_image = models.ImageField(upload_to=user_directory_path, default="farmer.jpg")
+    # description = models.TextField(null=True, blank=True, default="I am a great farmer")
+    # text=CKEditor5Field('Text', config_name='extends')
+    description = CKEditor5Field('Description', config_name='extends')
+
+    address = models.CharField(max_length=100, default="Busia, Kenya")
+    contact = models.CharField(max_length=100, default="+254740298531")
+    chat_response_time = models.CharField(max_length=100, default="100")
+    # shipping_on_time = models.CharField(max_length=100, default="100")
+    authentic_rating = models.CharField(max_length=100, default="98")
+    # days_return = models.CharField(max_length=100, default="7")
+    # warranty_period = models.CharField(max_length=100, default="4")
+    # Whenever the farmer is deleted his/her shop is not deleted
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
+    class Meta:
+        verbose_name_plural = "Experts"
+
+    def expert_image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>' % (self.image.url))
     
+    def __str__(self):
+        return self.title
+
+    
+
 class Product(models.Model):
     productId = ShortUUIDField(unique=True, length=10, max_length=20, prefix="prd", alphabet="12345abcdefghi")
     title = models.CharField(max_length=150, default="Fresh vegetables")
     image = models.ImageField(upload_to=user_directory_path, default="product.jpg")
-    description = RichTextUploadingField(null=True, blank=True, default="This is product")
+    # description = RichTextUploadingField(null=True, blank=True, default="This is product")
+    description = CKEditor5Field('Description', config_name='extends', null=True, blank=True)
+
+    
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name="category")
@@ -120,7 +211,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=999999999, decimal_places=2, default=9.99)
     old_price = models.DecimalField(max_digits=999999999, decimal_places=2, default=19.99)
  
-    specification = RichTextUploadingField(null=True, blank=True, default="Specifications")
+    # specification = RichTextUploadingField(null=True, blank=True, default="Specifications")
+    specification = CKEditor5Field('Specification', config_name='extends', null=True, blank=True)
+
     type = models.CharField(max_length=100, default="Organic product", null=True, blank=True)
     stock_count = models.CharField(max_length=100, default="5", null=True, blank=True)
 
@@ -141,6 +234,7 @@ class Product(models.Model):
 
     class Meta:
         verbose_name_plural = "Products"
+
 
     def product_image(self):
         return mark_safe('<img src="%s" width="50" height="50"/>' % (self.image.url))
@@ -253,6 +347,8 @@ class ContactUs(models.Model):
     subject = models.CharField(max_length=150)
     message = models.TextField()
 
+    
+
     class Meta:
         verbose_name = "Contact Us"
         verbose_name_plural = "Contact Us"
@@ -260,4 +356,77 @@ class ContactUs(models.Model):
     
     def __str__(self):
         return self.fullname
-        
+
+
+
+
+# Add project part
+# from django.db import models
+# from django.contrib.auth import get_user_model
+# from django.urls import reverse
+# User = get_user_model()
+
+
+from ckeditor.fields import RichTextField
+from taggit.managers import TaggableManager
+
+
+JOB_TYPE = (
+    ('1', "Full time"),
+    ('2', "Part time"),
+    ('3', "Internship"),
+)
+
+class ProjectCategory(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+    
+
+class Job(models.Model):
+
+    user = models.ForeignKey(User, related_name='User', on_delete=models.CASCADE) 
+    title = models.CharField(max_length=300)
+    description = RichTextField()
+    tags = TaggableManager()
+    location = models.CharField(max_length=300)
+    job_type = models.CharField(choices=JOB_TYPE, max_length=1)
+    category = models.ForeignKey(ProjectCategory,related_name='ProjectCategory', on_delete=models.CASCADE)
+    salary = models.CharField(max_length=30, blank=True)
+    company_name = models.CharField(max_length=300)
+    company_description = RichTextField(blank=True, null=True)
+    url = models.URLField(max_length=200)
+    last_date = models.DateField()
+    is_published = models.BooleanField(default=False)
+    is_closed = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return self.title
+
+ 
+
+class Applicant(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+
+    def __str__(self):
+        return self.job.title
+
+
+  
+
+class BookmarkJob(models.Model):
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now=True, auto_now_add=False)
+
+
+    def __str__(self):
+        return self.job.title

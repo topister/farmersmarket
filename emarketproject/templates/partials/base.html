@@ -20,6 +20,8 @@
    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}" />
    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
    <link rel="stylesheet" href="{% static 'assets/css/product-list.css' %}" />
+   <link rel="stylesheet" href="../../static/website/css/dashboard.css">
+
 
 
    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"> -->
@@ -35,6 +37,26 @@
    
 
    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+   <!-- more for projects part -->
+   <!-- <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}" /> -->
+   <!-- <link rel="stylesheet" href="{% static 'css/custom-bs.css' %}"> -->
+   <!-- <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}"> -->
+   <!-- <link rel="stylesheet" href="{% static 'css/bootstrap-select.min.css' %}"> -->
+   <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+   <link rel="stylesheet" href="{% static 'fonts/line-icons/style.css' %}">
+   <!-- <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}"> -->
+   <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+   <!-- <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}"> -->
+   <!-- MAIN CSS -->
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+   <style>
+        .vendor-des .font-sm.descr-white p {
+            color: white !important;
+        }
+    </style>
 
 </head>
 
@@ -182,13 +204,13 @@
                                         </select>
                                     </form>
                                 </div>
-                                <div class="header-action-icon-2">
+                                <!-- <div class="header-action-icon-2">
                                     <a href="shop-compare.html">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
                                         <span class="pro-count blue">3</span>
                                     </a>
                                     <a href="shop-compare.html"><span class="lable ml-0">Compare</span></a>
-                                </div>
+                                </div> -->
                                 <div class="header-action-icon-2">
                                     <a href="{% url 'core:wishlist' %}">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-heart.svg' %}" />
@@ -256,7 +278,7 @@
                             <nav>
                                 <ul>
                                     <li class="hot-deals"><img src="{% static 'assets/imgs/theme/icons/icon-hot.svg' %}" alt="hot deals" /><a href="shop-grid-right.html">Deals</a></li>
-                                    <li>
+                                    <!-- <li>
                                         <a class="active" href="index.html">Home <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="index.html">Home 1</a></li>
@@ -266,12 +288,12 @@
                                             <li><a href="index-5.html">Home 5</a></li>
                                             <li><a href="index-6.html">Home 6</a></li>
                                         </ul>
+                                    </li> -->
+                                    <li>
+                                        <a href="{% url 'core:about-us' %}">About</a>
                                     </li>
                                     <li>
-                                        <a href="page-about.html">About</a>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html">Categories <i class="fi-rs-angle-down"></i></a>
+                                        <a href="{% url 'core:category-list' %}">Categories <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             {% for category in categories %}
                                             <li><a href="{% url 'core:product-list-category' category.categoryId %}">{{category.title}}</a></li>
@@ -284,8 +306,12 @@
                                     <li>
                                         <a href="{% url 'core:product-list' %}">Shop</a>
                                     </li>
-                                    
+
                                     <li>
+                                        <a href="{% url 'core:farmer-list' %}">Farmers</a>
+                                    </li>
+                                    
+                                    <!-- <li>
                                         <a href="#">Sellers <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="vendors-grid.html">Vendors Grid</a></li>
@@ -295,6 +321,9 @@
                                             <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
                                             <li><a href="vendor-guide.html">Vendor Guide</a></li>
                                         </ul>
+                                    </li> -->
+                                    <li>
+                                        <a href="{% url 'core:search_result' %}">Projects</a>
                                     </li>
 
                                     <li>
@@ -309,7 +338,7 @@
                                         </ul>
                                     </li>
 
-                                    <li>
+                                    <!-- <li>
                                         <a href="#">Projects <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="vendors-grid.html">Vendors Grid</a></li>
@@ -319,9 +348,13 @@
                                             <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
                                             <li><a href="vendor-guide.html">Vendor Guide</a></li>
                                         </ul>
-                                    </li>
+                                    </li> -->
 
                                     <li>
+                                        <a href="{% url 'core:expert-list' %}">Agri Experts</a>
+                                    </li>
+
+                                    <!-- <li>
                                         <a href="#">Agri Experts <i class="fi-rs-angle-down"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="vendors-grid.html">Vendors Grid</a></li>
@@ -331,7 +364,7 @@
                                             <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
                                             <li><a href="vendor-guide.html">Vendor Guide</a></li>
                                         </ul>
-                                    </li>
+                                    </li> -->
                                     <!-- <li class="position-static">
                                         <a href="#">Mega menu <i class="fi-rs-angle-down"></i></a>
                                         <ul class="mega-menu">
@@ -572,7 +605,6 @@
                                     <li><a href="{% url 'core:wishlist' %}">Shop – Wishlist</a></li>
                                     <li><a href="{% url 'core:cart' %}">Shop – Cart</a></li>
                                     <li><a href="{% url 'core:checkout' %}">Shop – Checkout</a></li>
-                                    <li><a href="shop-compare.html">Shop – Compare</a></li>
                                     <li class="menu-item-has-children">
                                         <a href="#">Shop Invoice</a>
                                         <ul class="dropdown">

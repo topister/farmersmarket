@@ -45,7 +45,7 @@
                         <div class="shop-product-fillter mb-50 pr-30">
                             <div class="totall-product">
                                 <h2>
-                                    <img class="w-36px mr-10" src="assets/imgs/theme/icons/category-1.svg" alt="" />
+                                    <img class="w-36px mr-10" src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />
                                     {{categories.count}} Categories  Found
                                 </h2>
                             </div>
@@ -148,7 +148,7 @@
                                 <ul>
                                     {% for category in categories %}
                                     <li>
-                                        <a href="shop-grid-right.html"> <img src="{{category.image.url}}" alt="" />{{category.title}}</a><span class="count">{{category.category.count}}</span>
+                                        <a href="{% url 'core:product-list-category' category.categoryId %}"> <img src="{{category.image.url}}" alt="" />{{category.title}}</a><span class="count">{{category.category.count}}</span>
                                     </li>
                                     {% endfor %}
                                     
@@ -159,7 +159,7 @@
                                 <h5 class="section-title style-1 mb-30">Trending Now</h5>
                                 <div class="single-post clearfix">
                                     <div class="image">
-                                        <img src="assets/imgs/shop/thumbnail-3.jpg" alt="#" />
+                                        <img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="#" />
                                     </div>
                                     <div class="content pt-10">
                                         <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
@@ -171,7 +171,7 @@
                                 </div>
                                 <div class="single-post clearfix">
                                     <div class="image">
-                                        <img src="assets/imgs/shop/thumbnail-4.jpg" alt="#" />
+                                        <img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="#" />
                                     </div>
                                     <div class="content pt-10">
                                         <h6><a href="shop-product-detail.html">Chen Sweater</a></h6>
@@ -183,7 +183,7 @@
                                 </div>
                                 <div class="single-post clearfix">
                                     <div class="image">
-                                        <img src="assets/imgs/shop/thumbnail-5.jpg" alt="#" />
+                                        <img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="#" />
                                     </div>
                                     <div class="content pt-10">
                                         <h6><a href="shop-product-detail.html">Colorful Jacket</a></h6>
@@ -195,7 +195,7 @@
                                 </div>
                                 <div class="single-post clearfix">
                                     <div class="image">
-                                        <img src="assets/imgs/shop/thumbnail-6.jpg" alt="#" />
+                                        <img src="{% static 'assets/imgs/shop/thumbnail-6.jpg' %}" alt="#" />
                                     </div>
                                     <div class="content pt-10">
                                         <h6><a href="shop-product-detail.html">Lorem, ipsum</a></h6>
@@ -211,22 +211,22 @@
                                 <div class="instagram-gellay">
                                     <ul class="insta-feed">
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-1.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-1.jpg' %}" alt="" /></a>
                                         </li>
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-2.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-2.jpg' %}" alt="" /></a>
                                         </li>
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-3.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="" /></a>
                                         </li>
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-4.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="" /></a>
                                         </li>
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-5.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="" /></a>
                                         </li>
                                         <li>
-                                            <a href="#"><img class="border-radius-5" src="assets/imgs/shop/thumbnail-6.jpg" alt="" /></a>
+                                            <a href="#"><img class="border-radius-5" src="{% static 'assets/imgs/shop/thumbnail-6.jpg' %}" alt="" /></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -256,7 +256,7 @@
                                 </ul>
                             </div>
                             <div class="banner-img wow fadeIn mb-50 animated d-lg-block d-none">
-                                <img src="assets/imgs/banner/banner-11.png" alt="" />
+                                <img src="{% static 'assets/imgs/banner/banner-11.png' %}" alt="" />
                                 <div class="banner-text">
                                     <span>Oganic</span>
                                     <h4>

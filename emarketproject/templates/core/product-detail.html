@@ -15,8 +15,8 @@
         <div class="page-header breadcrumb-wrap">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="index.html" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
-                    <span></span> <a href="shop-grid-right.html">Vegetables & tubers</a> <span></span> Seeds of Change Organic
+                    <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+                    <span></span> <a href="{% url 'core:product-detail' product.productId %}">{{product.category}}</a> <span></span> {{product.title}}
                 </div>
             </div>
         </div>
@@ -67,46 +67,30 @@
                                             </div>
                                             <div class="clearfix product-price-cover">
                                                 <div class="product-price primary-color float-left">
-                                                    <span class="current-price text-brand">kshs.</span><span class="current-price text-brand" id="curr-prod-price">{{product.price}}</span>
+                                                    <span class="current-price text-brand">$.</span><span class="current-price text-brand" id="curr-prod-price">{{product.price}}</span>
                                                     <span>
-                                                        <span class="save-price font-md color3 ml-15">-{{product.get_discount_percentage|floatformat:0}}</span>
-                                                    <span class="old-price font-md ml-15">ksh.{{product.old_price}}</span>
+                                                        <span class="save-price font-md color3 ml-15">-{{product.get_discount_percentage|floatformat:0}}%</span>
+                                                    <span class="old-price font-md ml-15">$.{{product.old_price}}</span>
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="short-desc mb-30">
                                                 <p class="font-lg">{{product.description|truncatechars:150|safe}}</p>
                                             </div>
-                                            <!-- <div class="attr-detail attr-size mb-30">
-                                                <strong class="mr-10">Size / Weight: </strong>
-                                                <ul class="list-filter size-filter font-small">
-                                                    <li><a href="#">50g</a></li>
-                                                    <li class="active"><a href="#">60g</a></li>
-                                                    <li><a href="#">80g</a></li>
-                                                    <li><a href="#">100g</a></li>
-                                                    <li><a href="#">150g</a></li>
-                                                </ul>
-                                            </div> -->
+                                            
                                             <div class="detail-extralink mb-50">
-                                                <!-- <div class="detail-qty border radius">
-                                                    <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                    <span class="qty-val">1</span>
-                                                    <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                                </div> -->
+                                               
                                                 
-                                                    <input type="number" value="1" name="" id="product-quantity" class="w-50 mb-20 product-quantity-{{ product.id }}"">
+                                                    <input type="number" value="1" name="" id="product-quantity" class="w-50 mb-20 product-quantity-{{ product.id }}">
+                                                    <span class="action text-center" data-title="Refresh"><button style="border: none; background: none;"  class="text-body update-product" data-product="{{ product_id }}"><i class="fi-rs-refresh"></i></button></span>
 
                                                     <div class="product-price">
-                                                        <span>ksh.</span><span class="curr-prod-price-{{product.id}}">{{product.price}}</span>
+                                                        <span>$.</span><span class="curr-prod-price-{{product.id}}">{{product.price}}</span>
 
-                                                        <span class="old-price">ksh.{{product.old_price}}</span>
+                                                        <span class="old-price">$.{{product.old_price}}</span>
                                                     </div>
                                                 
                                                 <div class="product-extra-link2">
-                                                    <!-- <input type="hidden" class="productId" value="{{product.productId}}" name="" id="">
-                                                    <input type="hidden" class="productTitle" value="{{product.title}}" name="" id=""> -->
-
-                                                    <!-- <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ product.id }}"> -->
                                                     <input type="hidden" class="product-productId-{{ product.id }}" value="{{ product.productId }}">
                                                     <input type="hidden" class="product-image-{{ product.id }}" value="{{ product.image.url }}">
                                                     <input type="hidden" class="product-id-{{ product.id }}" value="{{ product.id }}">
@@ -114,8 +98,7 @@
 
                                                     <button type="submit" id="add-to-cart-btn" class="button button-add-to-cart add add-to-cart-btn" data-index="{{product.id}}"><i class="fi-rs-shopping-cart"></i>Add to cart</button>
 
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up" href="{% url 'core:wishlist' %}"><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                    <a aria-label="Add To Wishlist" style="color: orange;" class="action-btn hover-up" href="{% url 'core:wishlist' %}"><i class="fi-rs-heart"></i></a>
                                                 </div>
                                             </div>
                                             <div class="font-xs">
@@ -138,10 +121,7 @@
                                         <ul class="nav nav-tabs text-uppercase">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="Description-tab" data-bs-toggle="tab" href="#Description">Description</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="Additional-info-tab" data-bs-toggle="tab" href="#Additional-info">Additional info</a>
-                                            </li>
+                                            </li>                                            
                                             <li class="nav-item">
                                                 <a class="nav-link" id="Vendor-info-tab" data-bs-toggle="tab" href="#Vendor-info">Farmer</a>
                                             </li>
@@ -155,96 +135,7 @@
                                                     <p>{{product.description|safe}}</p>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="Additional-info">
-                                                <table class="font-md">
-                                                    <tbody>
-                                                        <tr class="stand-up">
-                                                            <th>Stand Up</th>
-                                                            <td>
-                                                                <p>35″L x 24″W x 37-45″H(front to back wheel)</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-wo-wheels">
-                                                            <th>Folded (w/o wheels)</th>
-                                                            <td>
-                                                                <p>32.5″L x 18.5″W x 16.5″H</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="folded-w-wheels">
-                                                            <th>Folded (w/ wheels)</th>
-                                                            <td>
-                                                                <p>32.5″L x 24″W x 18.5″H</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="door-pass-through">
-                                                            <th>Door Pass Through</th>
-                                                            <td>
-                                                                <p>24</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="frame">
-                                                            <th>Frame</th>
-                                                            <td>
-                                                                <p>Aluminum</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-wo-wheels">
-                                                            <th>Weight (w/o wheels)</th>
-                                                            <td>
-                                                                <p>20 LBS</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="weight-capacity">
-                                                            <th>Weight Capacity</th>
-                                                            <td>
-                                                                <p>60 LBS</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="width">
-                                                            <th>Width</th>
-                                                            <td>
-                                                                <p>24″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="handle-height-ground-to-handle">
-                                                            <th>Handle height (ground to handle)</th>
-                                                            <td>
-                                                                <p>37-45″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="wheels">
-                                                            <th>Wheels</th>
-                                                            <td>
-                                                                <p>12″ air / wide track slick tread</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="seat-back-height">
-                                                            <th>Seat back height</th>
-                                                            <td>
-                                                                <p>21.5″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="head-room-inside-canopy">
-                                                            <th>Head room (inside canopy)</th>
-                                                            <td>
-                                                                <p>25″</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_color">
-                                                            <th>Color</th>
-                                                            <td>
-                                                                <p>Black, Blue, Red, White</p>
-                                                            </td>
-                                                        </tr>
-                                                        <tr class="pa_size">
-                                                            <th>Size</th>
-                                                            <td>
-                                                                <p>M, S</p>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                            
                                             <div class="tab-pane fade" id="Vendor-info">
                                                 <div class="vendor-logo d-flex mb-30">
                                                     <img src="{{product.farmer.image.url}}" alt="" />
@@ -280,7 +171,7 @@
                                                     </div>
                                                 </div>
                                                 <p>
-                                                    {{product.farmer.description|safe}}
+                                                    {{product.farmer.description | safe}}
                                                 </p>
                                             </div>
                                             <div class="tab-pane fade" id="Reviews">

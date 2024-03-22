@@ -74,8 +74,8 @@
                                             <div class="product-img-action-wrap">
                                                 <div class="product-img product-img-zoom">
                                                     <a href="{% url 'core:product-list-category' category.categoryId %}">
-                                                        <img class="default-img" src="{% static '{{prod.image.url}}' %}" alt="product image" />
-                                                        <img class="hover-img" src="{% static '{{prod.image.url}}' %}" alt="product image" />
+                                                        <img class="default-img" src="{{prod.image.url}}" alt="product image" />
+                                                        <img class="hover-img" src="{{prod.image.url}}" alt="product image" />
                                                     </a>
                                                 </div>
                                                 <div class="product-action-1">

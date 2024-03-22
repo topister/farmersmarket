@@ -1,11 +1,14 @@
+from ast import Module
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
-from core.models import Product, Category, Farmer, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
+import requests
+from core.models import Applicant, BookmarkJob, Job, Product, Category,ProjectCategory, Farmer, Expert, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
 from django.http import JsonResponse
+from core.permission import user_is_employee, user_is_employer
 from userauths.models import Profile
 from taggit.models import Tag
 from django.db.models import Count, Avg
-from core.forms import ProductReviewForm
+from core.forms import JobApplyForm, JobBookmarkForm, JobEditForm, JobForm, ProductReviewForm
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -18,6 +21,12 @@ from django.core import serializers
 import calendar
 from django.db.models.functions import ExtractMonth
 from django.db.models.signals import post_save
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+import razorpay
+import json
+
 
 
 # Create your views here.
@@ -66,6 +75,14 @@ def farmer_list(request):
 
     return render(request, "core/farmer-list.html", context)
 
+def expert_list(request):
+    experts = Expert.objects.all()
+    context = {
+        "experts": experts
+    }
+
+    return render(request, "core/expert-list.html", context)
+
 
 def farmer_details(request, farmerId):
     farmers = Farmer.objects.get(farmerId=farmerId)
@@ -76,6 +93,16 @@ def farmer_details(request, farmerId):
     }
 
     return render(request, "core/farmer-detail.html", context)
+
+def expert_details(request, expertId):
+    experts = Expert.objects.get(expertId=expertId)
+    # products = Product.objects.filter(farmer=farmers, product_status="published")
+    context = {
+        "experts": experts,
+        
+    }
+
+    return render(request, "core/expert-detail.html", context)
 
 def product_detail(request, productId):
     # Get the product from the database using its ID.
@@ -179,9 +206,7 @@ def ajax_add_review(request, productId):
     
 
     context = {
-        # "user":review.user.username,
-        # "review":review.review,
-        # "rating":review.rating,
+        
 
         "user":user.username,
 
@@ -434,6 +459,7 @@ from django.db.models.functions import ExtractMonth
 from django.db.models import Count
 import calendar
 
+
 @login_required
 def dashboard(request):
     if not request.user.is_authenticated:
@@ -487,53 +513,7 @@ def dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-# def dashboard(request):
-#     orders = CartOrder.objects.filter(user=request.user).order_by('-id')
-#     address = Address.objects.filter(user=request.user)
-#     profile = Profile.objects.get(user=request.user)
 
-#     cart_orders = CartOrder.objects.annotate(month=ExtractMonth('order_date')).values('month').annotate(count=Count('id')).values('month', 'count')
-
-#     month = []
-#     total_orders = []
-
-#     for order in cart_orders:
-#         month.append(calendar.month_name[order['month']])
-#         total_orders.append(order['count'])
-
-
-
-#     if request.method == 'POST':
-#         country = request.POST.get('country')
-#         city = request.POST.get('city')
-#         address = request.POST.get('address')
-#         mobile = request.POST.get('mobile')
-
-
-#         new_address = Address.objects.create(
-#             country = country,
-#             city = city,
-#             address = address,
-#             mobile = mobile,
-#             user=request.user,
-            
-
-#         )
-#         messages.success(request, "Address saved successfully!")
-#         return redirect('core:dashboard')
-#     else:('Error')
-
-
-#     context = {
-#         "orders": orders,
-#         "address":address,
-#         'profile':profile,
-#         'cart_orders':cart_orders,
-#         'month':month,
-#         'total_orders':total_orders,
-        
-#     }
-#     return render(request, 'core/dashboard.html', context)
 
 # Buyers dashboard
 def buyer_dashboard(request):
@@ -637,3 +617,553 @@ def contact_ajax(request):
 
 
     return JsonResponse({'context': context})
+
+
+
+def about_us(request):
+    return render(request, "core/about_us.html")
+
+
+def purchase_guide(request):
+    return render(request, "core/purchase_guide.html")
+
+def privacy_policy(request):
+    return render(request, "core/privacy_policy.html")
+
+def terms_of_service(request):
+    return render(request, "core/terms_of_service.html")
+
+# Project part
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.core.serializers import serialize
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+
+# from account.models import User
+from userauths.models import User
+# from jobapp.forms import *
+# from jobapp.models import *
+# from jobapp.permission import *
+# User = get_user_model()
+
+# from django.http import HttpRequest
+
+# def home_view(request):
+
+#     published_jobs = Job.objects.filter(is_published=True).order_by('-timestamp')
+#     jobs = published_jobs.filter(is_closed=False)
+#     # total_candidates = request.user.objects.filter(role='employee').count()
+#     total_candidates = User.objects.filter(role='employee').count()
+#     total_companies = User.objects.filter(role='employer').count()
+#     # total_companies = request.user.objects.filter(role='employer').count()
+#     paginator = Paginator(jobs, 3)
+#     page_number = request.GET.get('page',None)
+#     page_obj = paginator.get_page(page_number)
+
+#     if request.is_ajax():
+#         job_lists=[]
+#         job_objects_list = page_obj.object_list.values()
+#         for job_list in job_objects_list:
+#             job_lists.append(job_list)
+        
+
+#         next_page_number = None
+#         if page_obj.has_next():
+#             next_page_number = page_obj.next_page_number()
+
+#         prev_page_number = None       
+#         if page_obj.has_previous():
+#             prev_page_number = page_obj.previous_page_number()
+
+#         data={
+#             'job_lists':job_lists,
+#             'current_page_no':page_obj.number,
+#             'next_page_number':next_page_number,
+#             'no_of_page':paginator.num_pages,
+#             'prev_page_number':prev_page_number
+#         }    
+#         return JsonResponse(data)
+    
+#     context = {
+
+#     'total_candidates': total_candidates,
+#     'total_companies': total_companies,
+#     'total_jobs': len(jobs),
+#     'total_completed_jobs':len(published_jobs.filter(is_closed=True)),
+#     'page_obj': page_obj
+#     }
+#     print('ok')
+#     return render(request, 'jobapp/index.html', context)
+
+from django.http import HttpRequest, JsonResponse
+
+def home_view(request):
+
+    published_jobs = Job.objects.filter(is_published=True).order_by('-timestamp')
+    jobs = published_jobs.filter(is_closed=False)
+    total_candidates = User.objects.filter(role='employee').count()
+    total_companies = User.objects.filter(role='employer').count()
+    paginator = Paginator(jobs, 3)
+    page_number = request.GET.get('page', None)
+    page_obj = paginator.get_page(page_number)
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        job_lists = []
+        job_objects_list = page_obj.object_list.values()
+        for job_list in job_objects_list:
+            job_lists.append(job_list)
+
+        next_page_number = None
+        if page_obj.has_next():
+            next_page_number = page_obj.next_page_number()
+
+        prev_page_number = None
+        if page_obj.has_previous():
+            prev_page_number = page_obj.previous_page_number()
+
+        data = {
+            'job_lists': job_lists,
+            'current_page_no': page_obj.number,
+            'next_page_number': next_page_number,
+            'no_of_page': paginator.num_pages,
+            'prev_page_number': prev_page_number
+        }
+        return JsonResponse(data)
+
+    context = {
+        'total_candidates': total_candidates,
+        'total_companies': total_companies,
+        'total_jobs': len(jobs),
+        'total_completed_jobs': len(published_jobs.filter(is_closed=True)),
+        'page_obj': page_obj
+    }
+    print('ok')
+    return render(request, 'jobapp/index.html', context)
+
+
+@cache_page(60 * 15)
+def job_list_View(request):
+    """
+
+    """
+    job_list = Job.objects.filter(is_published=True,is_closed=False).order_by('-timestamp')
+    paginator = Paginator(job_list, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+
+        'page_obj': page_obj,
+
+    }
+    return render(request, 'jobapp/job-list.html', context)
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def create_job_View(request):
+    """
+    Provide the ability to create job post
+    """
+    form = JobForm(request.POST or None)
+
+    user = get_object_or_404(user=request.user, id=request.user.id)
+    categories = ProjectCategory.objects.all()
+
+    if request.method == 'POST':
+
+        if form.is_valid():
+
+            instance = form.save(commit=False)
+            instance.user = user
+            instance.save()
+            # for save tags
+            form.save_m2m()
+            messages.success(
+                    request, 'You are successfully posted your job! Please wait for review.')
+            return redirect(reverse("jobapp:single-job", kwargs={
+                                    'id': instance.id
+                                    }))
+
+    context = {
+        'form': form,
+        'categories': categories
+    }
+    return render(request, 'jobapp/post-job.html', context)
+
+
+def single_job_view(request, id):
+    """
+    Provide the ability to view job details
+    """
+    if cache.get(id):
+        job = cache.get(id)
+    else:
+        job = get_object_or_404(Job, id=id)
+        cache.set(id,job , 60 * 15)
+    related_job_list = job.tags.similar_objects()
+
+    paginator = Paginator(related_job_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'job': job,
+        'page_obj': page_obj,
+        'total': len(related_job_list)
+
+    }
+    return render(request, 'jobapp/job-single.html', context)
+
+
+def search_result_view(request):
+    """
+        User can search job with multiple fields
+
+    """
+
+    job_list = Job.objects.order_by('-timestamp')
+
+    # Keywords
+    if 'job_title_or_company_name' in request.GET:
+        job_title_or_company_name = request.GET['job_title_or_company_name']
+
+        if job_title_or_company_name:
+            job_list = job_list.filter(title__icontains=job_title_or_company_name) | job_list.filter(
+                company_name__icontains=job_title_or_company_name)
+
+    # location
+    if 'location' in request.GET:
+        location = request.GET['location']
+        if location:
+            job_list = job_list.filter(location__icontains=location)
+
+    # Job Type
+    if 'job_type' in request.GET:
+        job_type = request.GET['job_type']
+        if job_type:
+            job_list = job_list.filter(job_type__iexact=job_type)
+
+    # job_title_or_company_name = request.GET.get('text')
+    # location = request.GET.get('location')
+    # job_type = request.GET.get('type')
+
+    #     job_list = Job.objects.all()
+    #     job_list = job_list.filter(
+    #         Q(job_type__iexact=job_type) |
+    #         Q(title__icontains=job_title_or_company_name) |
+    #         Q(location__icontains=location)
+    #     ).distinct()
+
+    # job_list = Job.objects.filter(job_type__iexact=job_type) | Job.objects.filter(
+    #     location__icontains=location) | Job.objects.filter(title__icontains=text) | Job.objects.filter(company_name__icontains=text)
+
+    paginator = Paginator(job_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+
+        'page_obj': page_obj,
+
+    }
+    return render(request, 'jobapp/result.html', context)
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+# def apply_job_view(request, id):
+
+#     form = JobApplyForm(request.POST or None)
+
+#     user = get_object_or_404(user=request.user, id=request.user.id)
+#     applicant = Applicant.objects.filter(user=user, job=id)
+
+#     if not applicant:
+#         if request.method == 'POST':
+
+#             if form.is_valid():
+#                 instance = form.save(commit=False)
+#                 instance.user = user
+#                 instance.save()
+
+#                 messages.success(
+#                     request, 'You have successfully applied for this job!')
+#                 return redirect(reverse("jobapp:single-job", kwargs={
+#                     'id': id
+#                 }))
+
+#         else:
+#             return redirect(reverse("jobapp:single-job", kwargs={
+#                 'id': id
+#             }))
+
+#     else:
+
+#         messages.error(request, 'You already applied for the Job!')
+
+#         return redirect(reverse("jobapp:single-job", kwargs={
+#             'id': id
+#         }))
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+def apply_job_view(request, id):
+    form = JobApplyForm(request.POST or None)
+
+    user = get_object_or_404(User, id=request.user.id)
+
+    applicant = Applicant.objects.filter(user=user, job=id)
+
+    if not applicant:
+        if request.method == 'POST':
+            if form.is_valid():
+                instance = form.save(commit=False)
+                instance.user = user
+                instance.save()
+
+                messages.success(request, 'You have successfully applied for this job!')
+                return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+        else:
+            return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+    else:
+        messages.error(request, 'You already applied for the Job!')
+        return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+
+
+
+@login_required(login_url=reverse_lazy('account:login'))
+def dashboard_view(request):
+    """
+    """
+    jobs = []
+    savedjobs = []
+    appliedjobs = []
+    total_applicants = {}
+    if request.user.role == 'employer':
+
+        jobs = Job.objects.filter(user=request.user.id)
+        for job in jobs:
+            count = Applicant.objects.filter(job=job.id).count()
+            total_applicants[job.id] = count
+
+    if request.user.role == 'employee':
+        savedjobs = BookmarkJob.objects.filter(user=request.user.id)
+        appliedjobs = Applicant.objects.filter(user=request.user.id)
+    context = {
+
+        'jobs': jobs,
+        'savedjobs': savedjobs,
+        'appliedjobs':appliedjobs,
+        'total_applicants': total_applicants
+    }
+
+    return render(request, 'jobapp/project-dashboard.html', context)
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def delete_job_view(request, id):
+
+    job = get_object_or_404(Job, id=id, user=request.user.id)
+
+    if job:
+
+        job.delete()
+        messages.success(request, 'Your Job Post was successfully deleted!')
+
+    return redirect('jobapp:dashboard')
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def make_complete_job_view(request, id):
+    job = get_object_or_404(Job, id=id, user=request.user.id)
+
+    if job:
+        try:
+            job.is_closed = True
+            job.save()
+            messages.success(request, 'Your Job was marked closed!')
+        except:
+            messages.success(request, 'Something went wrong !')
+            
+    return redirect('jobapp:project-dashboard')
+
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def all_applicants_view(request, id):
+
+    all_applicants = Applicant.objects.filter(job=id)
+
+    context = {
+
+        'all_applicants': all_applicants
+    }
+
+    return render(request, 'jobapp/all-applicants.html', context)
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+def delete_bookmark_view(request, id):
+
+    job = get_object_or_404(BookmarkJob, id=id, user=request.user.id)
+
+    if job:
+
+        job.delete()
+        messages.success(request, 'Saved Job was successfully deleted!')
+
+    return redirect('jobapp:dashboard')
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def applicant_details_view(request, id):
+
+    applicant = get_object_or_404(user=request.user, id=id)
+
+    context = {
+
+        'applicant': applicant
+    }
+
+    return render(request, 'jobapp/applicant-details.html', context)
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+# def job_bookmark_view(request, id):
+
+#     form = JobBookmarkForm(request.POST or None)
+
+#     user = get_object_or_404(user=request.user, id=request.user.id)
+#     applicant = BookmarkJob.objects.filter(user=request.user.id, job=id)
+
+#     if not applicant:
+#         if request.method == 'POST':
+
+#             if form.is_valid():
+#                 instance = form.save(commit=False)
+#                 instance.user = user
+#                 instance.save()
+
+#                 messages.success(
+#                     request, 'You have successfully save this job!')
+#                 return redirect(reverse("jobapp:single-job", kwargs={
+#                     'id': id
+#                 }))
+
+#         else:
+#             return redirect(reverse("jobapp:single-job", kwargs={
+#                 'id': id
+#             }))
+
+#     else:
+#         messages.error(request, 'You already saved this Job!')
+
+#         return redirect(reverse("jobapp:single-job", kwargs={
+#             'id': id
+#         }))
+
+# from django.shortcuts import get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from django.urls import reverse
+# from django.http import HttpResponseRedirect
+# from django.contrib import messages
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+# def job_bookmark_view(request, id):
+#     form = JobBookmarkForm(request.POST or None)
+
+#     user = get_object_or_404(User, id=request.user.id)
+#     bookmark = get_object_or_404(BookmarkJob, user=user, job=id)
+
+#     if request.method == 'POST':
+#         if form.is_valid():
+#             instance = form.save(commit=False)
+#             instance.user = user
+#             instance.save()
+
+#             messages.success(request, 'You have successfully saved this job!')
+#             return HttpResponseRedirect(reverse("jobapp:single-job", kwargs={'id': id}))
+#     else:
+#         messages.error(request, 'You already saved this job!')
+    
+#     return HttpResponseRedirect(reverse("jobapp:single-job", kwargs={'id': id}))
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employee
+def job_bookmark_view(request, id):
+    form = JobBookmarkForm(request.POST or None)
+
+    user = request.user
+    try:
+        bookmark = BookmarkJob.objects.get(user=user, job=id)
+    except BookmarkJob.DoesNotExist:
+        bookmark = None
+
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = user
+            instance.save()
+
+            messages.success(request, 'You have successfully saved this job!')
+            return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+    else:
+        if bookmark is None:
+            messages.error(request, 'You already saved this job!')
+    
+    return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+
+
+# @login_required(login_url=reverse_lazy('account:login'))
+# @user_is_employer
+def job_edit_view(request, id=id):
+    """
+    Handle Job Update
+
+    """
+
+    job = get_object_or_404(Job, id=id, user=request.user.id)
+    categories = ProjectCategory.objects.all()
+    form = JobEditForm(request.POST or None, instance=job)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.save()
+        # for save tags
+        # form.save_m2m()
+        messages.success(request, 'Your Job Post Was Successfully Updated!')
+        return redirect(reverse("jobapp:single-job", kwargs={
+            'id': instance.id
+        }))
+    context = {
+
+        'form': form,
+        'categories': categories
+    }
+
+    return render(request, 'jobapp/job-edit.html', context)

@@ -7,6 +7,18 @@ urlpatterns = [
     path('', views.index, name="index"),
     path("ckeditor/", include("ckeditor_uploader.urls")), #For CKEditor5
 
+    path("management/", include("management.urls")),
+
+    # path("index/", views.Index.as_view(), name="index"),
+    path("trendings/", views.Trendings.as_view(), name="trendings"),
+    path("latest/", views.Latest.as_view(), name="latest"),
+    path("popular/", views.Popular.as_view(), name="popular"),
+    path("search/", views.Search.as_view(), name="search"),
+    path("bookmark/", views.BookmarkView.as_view(), name="bookmark"),
+    path("terms-and-conditions/", views.TermsAndConditions.as_view(), name="terms_and_conditions"),
+    path("blogcategory/", views.BlogCategoryView.as_view(), name="blogcategory"),
+    path("blogcategory/<slug:cat>/", views.GetBlogCategory.as_view(), name="get_blogcategory"),
+
     # products
 
     path('products/', views.product_list, name="product-list"),
@@ -19,6 +31,10 @@ urlpatterns = [
     # farmers
     path('farmers/', views.farmer_list, name='farmer-list'),
     path('farmer/<farmerId>', views.farmer_details, name= "farmer-detail" ),
+
+    # buyers
+    path('buyers/', views.buyer_list, name='buyer-list'),
+    path('buyer/<buyerId>', views.buyer_details, name= "buyer-detail" ),
 
     # experts
     path('experts/', views.expert_list, name='expert-list'),
@@ -104,22 +120,22 @@ urlpatterns = [
 
 
     # Project part
-    path('projects/', views.home_view, name='home'),
-    path('jobs/', views.job_list_View, name='job-list'),
-    path('job/create/', views.create_job_View, name='create-job'),
-    path('job/<int:id>/', views.single_job_view, name='single-job'),
-    path('apply-job/<int:id>/', views.apply_job_view, name='apply-job'),
-    path('bookmark-job/<int:id>/', views.job_bookmark_view, name='bookmark-job'),
-    path('about/', views.single_job_view, name='about'),
-    path('contact/', views.single_job_view, name='contact'),
+    # path('projects/', views.home_view, name='home'),
+    path('projects/', views.project_list_View, name='project-list'),
+    path('project/create/', views.create_project_View, name='create-project'),
+    path('project/<int:id>/', views.single_project_view, name='single-project'),
+    path('apply-project/<int:id>/', views.apply_project_view, name='apply-project'),
+    path('bookmark-project/<int:id>/', views.project_bookmark_view, name='bookmark-project'),
+    # path('about/', views.single_project_view, name='about'),
+    # path('contact/', views.single_project_view, name='contact'),
     path('result/', views.search_result_view, name='search_result'),
     path('project-dashboard/', views.dashboard_view, name='project-dashboard'),
-    path('dashboard/employer/job/<int:id>/applicants/', views.all_applicants_view, name='applicants'),
-    path('dashboard/employer/job/edit/<int:id>', views.job_edit_view, name='edit-job'),
-    path('dashboard/employer/applicant/<int:id>/', views.applicant_details_view, name='applicant-details'),
-    path('dashboard/employer/close/<int:id>/', views.make_complete_job_view, name='complete'),
-    path('dashboard/employer/delete/<int:id>/', views.delete_job_view, name='delete'),
-    path('dashboard/employee/delete-bookmark/<int:id>/', views.delete_bookmark_view, name='delete-bookmark'),
+    path('project-dashboard/buyer/project/<int:id>/applicants/', views.all_applicants_view, name='applicants'),
+    path('project-dashboard/buyer/project/edit/<int:id>', views.project_edit_view, name='edit-project'),
+    path('project-dashboard/buyer/applicant/<int:id>/', views.applicant_details_view, name='applicant-details'),
+    path('project-dashboard/buyer/close/<int:id>/', views.make_complete_project_view, name='complete'),
+    path('project-dashboard/buyer/delete/<int:id>/', views.delete_project_view, name='delete'),
+    path('project-dashboard/farmer/delete-bookmark/<int:id>/', views.delete_bookmark_view, name='delete-bookmark'),
 
 
 

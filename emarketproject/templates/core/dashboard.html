@@ -88,8 +88,10 @@
                                                 {% endif %}
 
                                                 <div class="p-4 border rounded mb-4" style="border: none;">
-                                                    <a href="{% url 'userauths:profile-edit' %}" class="btn btn-success" style="color: white;">Edit profile</a>
+                                                    <a href="{% url 'userauths:profile-edit' request.user.id %}" class="btn btn-success" style="color: white;">Edit profile</a>
+                                                    
                                                 </div>
+                                                
                                                 </div>
 
                                                 

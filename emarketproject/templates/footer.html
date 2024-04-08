@@ -1,14 +1,36 @@
-    <footer class="site-footer">
+
+<style>
+  .list-unstyled{color: white;}
+
+  .footer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* margin: 50px;  */
+  padding-left: -300px;
+  padding-right: 200px;
+  /* margin-right: 50px; */
+}
+
+.site-footer .container .row.justify-content-between {
+  flex-wrap: wrap;
+}
+
+
+
+</style>
+<footer class="site-footer" style="background-color: #3BB77E;">
 
       <a href="#top" class="smoothscroll scroll-top">
         <span class="icon-keyboard_arrow_up"></span>
       </a>
 
-      <div class="container">
-        <div class="row mb-5">
+      <div class="container footer-container">
+        <div class="row mb-5 justify-content-between">
           <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Category</h3>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled footer-list">
               <li><a href="#">Web Design</a></li>
               <li><a href="#">Graphic Design</a></li>
               <li><a href="#">Web Developers</a></li>
@@ -19,7 +41,7 @@
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Company</h3>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled footer-list">
               <li><a href="#">About Us</a></li>
               <li><a href="#">Career</a></li>
               <li><a href="#">Blog</a></li>
@@ -28,7 +50,7 @@
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Support</h3>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled footer-list">
               <li><a href="#">Support</a></li>
               <li><a href="#">Privacy</a></li>
               <li><a href="#">Terms of Service</a></li>
@@ -48,12 +70,10 @@
         <div class="row text-center">
           <div class="col-12">
             <p class="copyright"><small>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            Copyright &copy; <a>DJobPortal</a>
-            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></small></p>
+            Copyright &copy; <a>DigiFarm</a> <span>2024</span>
+            </small></p>
           </div>
         </div>
       </div>
     </footer>
   
-  </div>

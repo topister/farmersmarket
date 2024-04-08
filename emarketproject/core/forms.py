@@ -1,5 +1,4 @@
 from django import forms
-# from core.models import Applicant, BookmarkJob, Job, ProductReview
 from django.shortcuts import get_object_or_404, render, HttpResponse
 from django import forms
 from django.contrib.auth import authenticate
@@ -17,14 +16,14 @@ class ProductReviewForm(forms.ModelForm):
         fields = ['review', 'rating']
 # Project Part
 
-class JobForm(forms.ModelForm):
+class ProjectForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         forms.ModelForm.__init__(self, *args, **kwargs)
-        self.fields['title'].label = "Job Title :"
-        self.fields['location'].label = "Job Location :"
+        self.fields['title'].label = "Project Title :"
+        self.fields['location'].label = "Project Location :"
         self.fields['salary'].label = "Salary :"
-        self.fields['description'].label = "Job Description :"
+        self.fields['description'].label = "Project Description :"
         self.fields['tags'].label = "Tags :"
         self.fields['last_date'].label = "Submission Deadline :"
         self.fields['company_name'].label = "Company Name :"
@@ -70,12 +69,12 @@ class JobForm(forms.ModelForm):
 
 
     class Meta:
-        model = Job
+        model = Project
 
         fields = [
             "title",
             "location",
-            "job_type",
+            "project_type",
             "category",
             "salary",
             "description",
@@ -86,12 +85,12 @@ class JobForm(forms.ModelForm):
             "url"
             ]
 
-    def clean_job_type(self):
-        job_type = self.cleaned_data.get('job_type')
+    def clean_project_type(self):
+        project_type = self.cleaned_data.get('project_type')
 
-        if not job_type:
+        if not project_type:
             raise forms.ValidationError("Service is required")
-        return job_type
+        return project_type
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
@@ -102,36 +101,34 @@ class JobForm(forms.ModelForm):
 
 
     def save(self, commit=True):
-        job = super(JobForm, self).save(commit=False)
+        project = super(ProjectForm, self).save(commit=False)
         if commit:
             
-            job.save()
-        return job
+            project.save()
+        return project
 
 
-
-
-class JobApplyForm(forms.ModelForm):
+class ProjectApplyForm(forms.ModelForm):
     class Meta:
         model = Applicant
-        fields = ['job']
+        fields = ['project']
 
-class JobBookmarkForm(forms.ModelForm):
+class ProjectBookmarkForm(forms.ModelForm):
     class Meta:
-        model = BookmarkJob
-        fields = ['job']
+        model = BookmarkProject
+        fields = ['project']
 
 
 
 
-class JobEditForm(forms.ModelForm):
+class ProjectEditForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         forms.ModelForm.__init__(self, *args, **kwargs)
-        self.fields['title'].label = "Job Title :"
-        self.fields['location'].label = "Job Location :"
+        self.fields['title'].label = "Project Title :"
+        self.fields['location'].label = "Project Location :"
         self.fields['salary'].label = "Salary :"
-        self.fields['description'].label = "Job Description :"
+        self.fields['description'].label = "Project Description :"
         # self.fields['tags'].label = "Tags :"
         self.fields['last_date'].label = "Dead Line :"
         self.fields['company_name'].label = "Company Name :"
@@ -181,12 +178,12 @@ class JobEditForm(forms.ModelForm):
                 }))
 
     class Meta:
-        model = Job
+        model = Project
 
         fields = [
             "title",
             "location",
-            "job_type",
+            "project_type",
             "category",
             "salary",
             "description",
@@ -196,12 +193,12 @@ class JobEditForm(forms.ModelForm):
             "url"
             ]
 
-    def clean_job_type(self):
-        job_type = self.cleaned_data.get('job_type')
+    def clean_project_type(self):
+        project_type = self.cleaned_data.get('project_type')
 
-        if not job_type:
-            raise forms.ValidationError("Job Type is required")
-        return job_type
+        if not project_type:
+            raise forms.ValidationError("Project Type is required")
+        return project_type
 
     def clean_category(self):
         category = self.cleaned_data.get('category')
@@ -212,8 +209,8 @@ class JobEditForm(forms.ModelForm):
 
 
     def save(self, commit=True):
-        job = super(JobEditForm, self).save(commit=False)
+        project = super(ProjectEditForm, self).save(commit=False)
       
         if commit:
-            job.save()
-        return job
+            project.save()
+        return project

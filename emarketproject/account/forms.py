@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class EmployeeRegistrationForm(UserCreationForm):
+class FarmerRegistrationForm(UserCreationForm):
 
 
     def __init__(self, *args, **kwargs):
@@ -62,13 +62,13 @@ class EmployeeRegistrationForm(UserCreationForm):
 
     def save(self, commit=True):
         user = UserCreationForm.save(self,commit=False)
-        user.role = "employee"
+        user.role = "farmer"
         if commit:
             user.save()
         return user
 
 
-class EmployerRegistrationForm(UserCreationForm):
+class BuyerRegistrationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         UserCreationForm.__init__(self, *args, **kwargs)
         self.fields['first_name'].required = True
@@ -106,13 +106,12 @@ class EmployerRegistrationForm(UserCreationForm):
     class Meta:
 
         model=User
-
         fields = ['first_name', 'last_name', 'email', 'password1', 'password2',]
 
 
     def save(self, commit=True):
         user = UserCreationForm.save(self,commit=False)
-        user.role = "employer"
+        user.role = "buyer"
         if commit:
             user.save()
         return user
@@ -151,10 +150,10 @@ class UserLoginForm(forms.Form):
 
 
 
-class EmployeeProfileEditForm(forms.ModelForm):
+class FarmerProfileEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
-        super(EmployeeProfileEditForm, self).__init__(*args, **kwargs)
+        super(FarmerProfileEditForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs.update(
             {
                 'placeholder': 'Enter First Name',

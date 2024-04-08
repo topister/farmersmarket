@@ -2,13 +2,13 @@ from ast import Module
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from core.models import Applicant, BookmarkJob, Job, Product, Category,ProjectCategory, Farmer, Expert, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
+from core.models import Applicant, BookmarkProject, Buyer, Project, Product, Category,ProjectCategory, Farmer, Expert, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
 from django.http import JsonResponse
-from core.permission import user_is_employee, user_is_employer
+from core.permission import user_is_farmer, user_is_buyer
 from userauths.models import Profile
 from taggit.models import Tag
 from django.db.models import Count, Avg
-from core.forms import JobApplyForm, JobBookmarkForm, JobEditForm, JobForm, ProductReviewForm
+from core.forms import ProjectApplyForm, ProjectBookmarkForm, ProjectEditForm, ProjectForm, ProductReviewForm
 from django.http import JsonResponse, HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
@@ -16,6 +16,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
+
 from django.template.loader import render_to_string
 from django.core import serializers
 import calendar
@@ -26,6 +27,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 import razorpay
 import json
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 
@@ -75,6 +81,14 @@ def farmer_list(request):
 
     return render(request, "core/farmer-list.html", context)
 
+def buyer_list(request):
+    buyers = Buyer.objects.all()
+    context = {
+        "buyers": buyers
+    }
+
+    return render(request, "core/buyer-list.html", context)
+
 def expert_list(request):
     experts = Expert.objects.all()
     context = {
@@ -94,6 +108,16 @@ def farmer_details(request, farmerId):
 
     return render(request, "core/farmer-detail.html", context)
 
+def buyer_details(request, buyerId):
+    buyers = Buyer.objects.get(buyerId=buyerId)
+    # products = Product.objects.filter(farmer=farmers, product_status="published")
+    context = {
+        "buyers": buyers,
+        
+    }
+
+    return render(request, "core/buyer-detail.html", context)
+
 def expert_details(request, expertId):
     experts = Expert.objects.get(expertId=expertId)
     # products = Product.objects.filter(farmer=farmers, product_status="published")
@@ -104,17 +128,11 @@ def expert_details(request, expertId):
 
     return render(request, "core/expert-detail.html", context)
 
-def product_detail(request, productId):
-    # Get the product from the database using its ID.
-    # product = Product.objects.get(productId=productId)
-    
+def product_detail(request, productId): 
       
     product = Product.objects.get(productId=productId)
     products = Product.objects.filter(category=product.category).exclude(productId=productId)
-
     product_image = product.product_images.all()
-
-
     # getting all reviews
     reviews = ProductReview.objects.filter(product=product).order_by("-date")
 
@@ -131,11 +149,6 @@ def product_detail(request, productId):
 
         if user_review_count > 0:
             make_review = False
-
-
-
-
-
     context = {
         "product" : product,
         "product_image": product_image,
@@ -354,28 +367,89 @@ def update_cart(request):
     context = render_to_string("core/async-cart-list.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
+# @login_required
+# def checkout(request):
+
+#     cart_total_amount = 0
+#     total = 0
+
+#     # checking if cart_dataObj session still exist
+
+#     if 'cart_dataObj' in request.session:
+#         # loop for the total amount for paypal
+#         for productId, item in request.session['cart_dataObj'].items():
+#             total += int(item['quantity']) * float(item['price'])
+
+#         # creating order object
+
+#         order = CartOrder.objects.create(
+#             user=request.user,
+#             price=total
+#         )
+
+#         # loop for the cart total amount
+
+#         for productId, item in request.session['cart_dataObj'].items():
+#             cart_total_amount += int(item['quantity']) * float(item['price'])
+
+#             cart_order_items = CartItems.objects.create(
+#                 order=order,
+#                 invoice_number="Invoice_NO" + str(order.id),
+#                 item=item['title'],
+#                 image=item['image'],
+#                 quantity=item['quantity'],
+#                 price=item['price'],
+#                 total=float(item['quantity']) * float(item['price']),
+#             )
+
+#     host = request.get_host()
+#     paypal_dict = {
+#         'business': settings.PAYPAL_RECEIVER_EMAIL,
+#         'amount': cart_total_amount,
+#         'item_name': 'Order-Item-No' + str(order.id),
+#         'invoice': 'INV-NO' + str(order.id),
+#         'currency_code': 'USD',
+#         'notify_url': 'http://{}{}'.format(host,reverse('core:paypal-ipn')),
+#         'return_url': 'http://{}{}'.format(host,reverse('core:paypal-success')),
+#         'cancel_return': 'http://{}{}'.format(host,reverse('core:paypal-fail')),
+#             }
+    
+#     # Form to render the paypal button
+#     payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
+
+#     try:
+
+#         active_address = Address.objects.get(user=request.user, status=True)
+
+#     except:
+#         messages.warning(request, "You have multiple addresses, activate only one!")
+#         active_address = None
+
+
+    
+
+#     return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form, 'active_address':active_address})
+
 @login_required
 def checkout(request):
 
     cart_total_amount = 0
     total = 0
+    order = None  # Initialize order outside the if condition
 
     # checking if cart_dataObj session still exist
-
     if 'cart_dataObj' in request.session:
         # loop for the total amount for paypal
         for productId, item in request.session['cart_dataObj'].items():
             total += int(item['quantity']) * float(item['price'])
 
         # creating order object
-
         order = CartOrder.objects.create(
             user=request.user,
             price=total
         )
 
         # loop for the cart total amount
-
         for productId, item in request.session['cart_dataObj'].items():
             cart_total_amount += int(item['quantity']) * float(item['price'])
 
@@ -389,49 +463,39 @@ def checkout(request):
                 total=float(item['quantity']) * float(item['price']),
             )
 
-
-
-
-
-
-
-
-
     host = request.get_host()
     paypal_dict = {
         'business': settings.PAYPAL_RECEIVER_EMAIL,
         'amount': cart_total_amount,
-        'item_name': 'Order-Item-No' + str(order.id),
-        'invoice': 'INV-NO' + str(order.id),
         'currency_code': 'USD',
-        'notify_url': 'http://{}{}'.format(host,reverse('core:paypal-ipn')),
-        'return_url': 'http://{}{}'.format(host,reverse('core:paypal-success')),
-        'cancel_return': 'http://{}{}'.format(host,reverse('core:paypal-fail')),
-            }
-    
-    # Form to render the paypal button
+        'notify_url': 'http://{}{}'.format(host, reverse('core:paypal-ipn')),
+        'return_url': 'http://{}{}'.format(host, reverse('core:paypal-success')),
+        'cancel_return': 'http://{}{}'.format(host, reverse('core:paypal-fail')),
+    }
+
+    # If order is not None (i.e., it was created)
+    if order:
+        paypal_dict.update({
+            'item_name': 'Order-Item-No' + str(order.id),
+            'invoice': 'INV-NO' + str(order.id),
+        })
+
+    # Form to render the PayPal button
     payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
 
-
-    # cart_total_amount = 0
-
-    # if 'cart_dataObj' in request.session:
-    #     for productId, item in request.session['cart_dataObj'].items():
-    #         cart_total_amount += int(item['quantity']) * float(item['price'])
-
     try:
-
         active_address = Address.objects.get(user=request.user, status=True)
-
-    except:
+    except Address.DoesNotExist:
         messages.warning(request, "You have multiple addresses, activate only one!")
         active_address = None
 
-
-    
-
-    return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form, 'active_address':active_address})
-
+    return render(request, "core/checkout.html", {
+        "cart_data": request.session.get('cart_dataObj', {}),
+        'cartTotalItems': len(request.session.get('cart_dataObj', {})),
+        'cart_total_amount': cart_total_amount,
+        'payment_button_form': payment_button_form,
+        'active_address': active_address
+    })
 
 
 @login_required
@@ -648,77 +712,25 @@ from django.core.cache import cache
 
 # from account.models import User
 from userauths.models import User
-# from jobapp.forms import *
-# from jobapp.models import *
-# from jobapp.permission import *
-# User = get_user_model()
 
-# from django.http import HttpRequest
-
-# def home_view(request):
-
-#     published_jobs = Job.objects.filter(is_published=True).order_by('-timestamp')
-#     jobs = published_jobs.filter(is_closed=False)
-#     # total_candidates = request.user.objects.filter(role='employee').count()
-#     total_candidates = User.objects.filter(role='employee').count()
-#     total_companies = User.objects.filter(role='employer').count()
-#     # total_companies = request.user.objects.filter(role='employer').count()
-#     paginator = Paginator(jobs, 3)
-#     page_number = request.GET.get('page',None)
-#     page_obj = paginator.get_page(page_number)
-
-#     if request.is_ajax():
-#         job_lists=[]
-#         job_objects_list = page_obj.object_list.values()
-#         for job_list in job_objects_list:
-#             job_lists.append(job_list)
-        
-
-#         next_page_number = None
-#         if page_obj.has_next():
-#             next_page_number = page_obj.next_page_number()
-
-#         prev_page_number = None       
-#         if page_obj.has_previous():
-#             prev_page_number = page_obj.previous_page_number()
-
-#         data={
-#             'job_lists':job_lists,
-#             'current_page_no':page_obj.number,
-#             'next_page_number':next_page_number,
-#             'no_of_page':paginator.num_pages,
-#             'prev_page_number':prev_page_number
-#         }    
-#         return JsonResponse(data)
-    
-#     context = {
-
-#     'total_candidates': total_candidates,
-#     'total_companies': total_companies,
-#     'total_jobs': len(jobs),
-#     'total_completed_jobs':len(published_jobs.filter(is_closed=True)),
-#     'page_obj': page_obj
-#     }
-#     print('ok')
-#     return render(request, 'jobapp/index.html', context)
 
 from django.http import HttpRequest, JsonResponse
 
 def home_view(request):
 
-    published_jobs = Job.objects.filter(is_published=True).order_by('-timestamp')
-    jobs = published_jobs.filter(is_closed=False)
-    total_candidates = User.objects.filter(role='employee').count()
-    total_companies = User.objects.filter(role='employer').count()
-    paginator = Paginator(jobs, 3)
+    published_projects = Project.objects.filter(is_published=True).order_by('-timestamp')
+    projects = published_projects.filter(is_closed=False)
+    total_candidates = User.objects.filter(role='farmer').count()
+    total_companies = User.objects.filter(role='buyer').count()
+    paginator = Paginator(projects, 3)
     page_number = request.GET.get('page', None)
     page_obj = paginator.get_page(page_number)
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        job_lists = []
-        job_objects_list = page_obj.object_list.values()
-        for job_list in job_objects_list:
-            job_lists.append(job_list)
+        project_lists = []
+        project_objects_list = page_obj.object_list.values()
+        for project_list in project_objects_list:
+            project_lists.append(project_list)
 
         next_page_number = None
         if page_obj.has_next():
@@ -729,7 +741,7 @@ def home_view(request):
             prev_page_number = page_obj.previous_page_number()
 
         data = {
-            'job_lists': job_lists,
+            'project_lists': project_lists,
             'current_page_no': page_obj.number,
             'next_page_number': next_page_number,
             'no_of_page': paginator.num_pages,
@@ -740,21 +752,21 @@ def home_view(request):
     context = {
         'total_candidates': total_candidates,
         'total_companies': total_companies,
-        'total_jobs': len(jobs),
-        'total_completed_jobs': len(published_jobs.filter(is_closed=True)),
+        'total_projects': len(projects),
+        'total_completed_projects': len(published_projects.filter(is_closed=True)),
         'page_obj': page_obj
     }
     print('ok')
-    return render(request, 'jobapp/index.html', context)
+    return render(request, 'projectapp/index.html', context)
 
 
 @cache_page(60 * 15)
-def job_list_View(request):
+def project_list_View(request):
     """
 
     """
-    job_list = Job.objects.filter(is_published=True,is_closed=False).order_by('-timestamp')
-    paginator = Paginator(job_list, 12)
+    project_list = Project.objects.filter(is_published=True,is_closed=False).order_by('-timestamp')
+    paginator = Paginator(project_list, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -763,19 +775,22 @@ def job_list_View(request):
         'page_obj': page_obj,
 
     }
-    return render(request, 'jobapp/job-list.html', context)
+    return render(request, 'projectapp/project-list.html', context)
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
-def create_job_View(request):
+@user_is_buyer
+def create_project_View(request):
     """
-    Provide the ability to create job post
+    Provide the ability to create project post
     """
-    form = JobForm(request.POST or None)
+    form = ProjectForm(request.POST or None)
 
-    user = get_object_or_404(user=request.user, id=request.user.id)
-    categories = ProjectCategory.objects.all()
+    user = get_object_or_404(User, id=request.user.id)
+
+
+    # user = get_object_or_404(user=request.user, id=request.user.id)
+    project_categories = ProjectCategory.objects.all()
 
     if request.method == 'POST':
 
@@ -787,85 +802,69 @@ def create_job_View(request):
             # for save tags
             form.save_m2m()
             messages.success(
-                    request, 'You are successfully posted your job! Please wait for review.')
-            return redirect(reverse("jobapp:single-job", kwargs={
+                    request, 'You are successfully posted your project! Please wait for review.')
+            return redirect(reverse("projectapp:single-project", kwargs={
                                     'id': instance.id
                                     }))
 
     context = {
         'form': form,
-        'categories': categories
+        'project_categories': project_categories
     }
-    return render(request, 'jobapp/post-job.html', context)
+    return render(request, 'projectapp/post-project.html', context)
 
 
-def single_job_view(request, id):
+def single_project_view(request, id):
     """
-    Provide the ability to view job details
+    Provide the ability to view project details
     """
     if cache.get(id):
-        job = cache.get(id)
+        project = cache.get(id)
     else:
-        job = get_object_or_404(Job, id=id)
-        cache.set(id,job , 60 * 15)
-    related_job_list = job.tags.similar_objects()
+        project = get_object_or_404(Project, id=id)
+        cache.set(id,project , 60 * 15)
+    related_project_list = project.tags.similar_objects()
 
-    paginator = Paginator(related_job_list, 5)
+    paginator = Paginator(related_project_list, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
-        'job': job,
+        'project': project,
         'page_obj': page_obj,
-        'total': len(related_job_list)
+        'total': len(related_project_list)
 
     }
-    return render(request, 'jobapp/job-single.html', context)
+    return render(request, 'projectapp/project-single.html', context)
 
 
 def search_result_view(request):
     """
-        User can search job with multiple fields
-
+        User can search project with multiple fields
     """
-
-    job_list = Job.objects.order_by('-timestamp')
-
+    project_list = Project.objects.order_by('-timestamp')
     # Keywords
-    if 'job_title_or_company_name' in request.GET:
-        job_title_or_company_name = request.GET['job_title_or_company_name']
+    if 'project_title_or_company_name' in request.GET:
+        project_title_or_company_name = request.GET['project_title_or_company_name']
 
-        if job_title_or_company_name:
-            job_list = job_list.filter(title__icontains=job_title_or_company_name) | job_list.filter(
-                company_name__icontains=job_title_or_company_name)
+        if project_title_or_company_name:
+            project_list = project_list.filter(title__icontains=project_title_or_company_name) | project_list.filter(
+                company_name__icontains=project_title_or_company_name)
 
     # location
     if 'location' in request.GET:
         location = request.GET['location']
         if location:
-            job_list = job_list.filter(location__icontains=location)
+            project_list = project_list.filter(location__icontains=location)
 
-    # Job Type
-    if 'job_type' in request.GET:
-        job_type = request.GET['job_type']
-        if job_type:
-            job_list = job_list.filter(job_type__iexact=job_type)
+    # Project Type
+    if 'project_type' in request.GET:
+        project_type = request.GET['project_type']
+        if project_type:
+            project_list = project_list.filter(project_type__iexact=project_type)
 
-    # job_title_or_company_name = request.GET.get('text')
-    # location = request.GET.get('location')
-    # job_type = request.GET.get('type')
-
-    #     job_list = Job.objects.all()
-    #     job_list = job_list.filter(
-    #         Q(job_type__iexact=job_type) |
-    #         Q(title__icontains=job_title_or_company_name) |
-    #         Q(location__icontains=location)
-    #     ).distinct()
-
-    # job_list = Job.objects.filter(job_type__iexact=job_type) | Job.objects.filter(
-    #     location__icontains=location) | Job.objects.filter(title__icontains=text) | Job.objects.filter(company_name__icontains=text)
-
-    paginator = Paginator(job_list, 10)
+    
+    paginator = Paginator(project_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {
@@ -873,44 +872,8 @@ def search_result_view(request):
         'page_obj': page_obj,
 
     }
-    return render(request, 'jobapp/result.html', context)
+    return render(request, 'projectapp/result.html', context)
 
-
-# @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
-# def apply_job_view(request, id):
-
-#     form = JobApplyForm(request.POST or None)
-
-#     user = get_object_or_404(user=request.user, id=request.user.id)
-#     applicant = Applicant.objects.filter(user=user, job=id)
-
-#     if not applicant:
-#         if request.method == 'POST':
-
-#             if form.is_valid():
-#                 instance = form.save(commit=False)
-#                 instance.user = user
-#                 instance.save()
-
-#                 messages.success(
-#                     request, 'You have successfully applied for this job!')
-#                 return redirect(reverse("jobapp:single-job", kwargs={
-#                     'id': id
-#                 }))
-
-#         else:
-#             return redirect(reverse("jobapp:single-job", kwargs={
-#                 'id': id
-#             }))
-
-#     else:
-
-#         messages.error(request, 'You already applied for the Job!')
-
-#         return redirect(reverse("jobapp:single-job", kwargs={
-#             'id': id
-#         }))
 
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -919,13 +882,13 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
-def apply_job_view(request, id):
-    form = JobApplyForm(request.POST or None)
+@user_is_farmer
+def apply_project_view(request, id):
+    form = ProjectApplyForm(request.POST or None)
 
     user = get_object_or_404(User, id=request.user.id)
 
-    applicant = Applicant.objects.filter(user=user, job=id)
+    applicant = Applicant.objects.filter(user=user, project=id)
 
     if not applicant:
         if request.method == 'POST':
@@ -934,106 +897,107 @@ def apply_job_view(request, id):
                 instance.user = user
                 instance.save()
 
-                messages.success(request, 'You have successfully applied for this job!')
-                return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+                messages.success(request, 'You have successfully applied for this project!')
+                return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
         else:
-            return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+            return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
     else:
-        messages.error(request, 'You already applied for the Job!')
-        return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+        messages.error(request, 'You already applied for the Project!')
+        return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
 
 
 
-@login_required(login_url=reverse_lazy('account:login'))
+# @login_required(login_url=reverse_lazy('account:login'))
+@login_required
 def dashboard_view(request):
     """
     """
-    jobs = []
-    savedjobs = []
-    appliedjobs = []
+    projects = []
+    savedprojects = []
+    appliedprojects = []
     total_applicants = {}
-    if request.user.role == 'employer':
+    if request.user.role == 'buyer':
 
-        jobs = Job.objects.filter(user=request.user.id)
-        for job in jobs:
-            count = Applicant.objects.filter(job=job.id).count()
-            total_applicants[job.id] = count
+        projects = Project.objects.filter(user=request.user.id)
+        for project in projects:
+            count = Applicant.objects.filter(project=project.id).count()
+            total_applicants[project.id] = count
 
-    if request.user.role == 'employee':
-        savedjobs = BookmarkJob.objects.filter(user=request.user.id)
-        appliedjobs = Applicant.objects.filter(user=request.user.id)
+    if request.user.role == 'farmer':
+        savedprojects = BookmarkProject.objects.filter(user=request.user.id)
+        appliedprojects = Applicant.objects.filter(user=request.user.id)
     context = {
 
-        'jobs': jobs,
-        'savedjobs': savedjobs,
-        'appliedjobs':appliedjobs,
+        'projects': projects,
+        'savedprojects': savedprojects,
+        'appliedprojects':appliedprojects,
         'total_applicants': total_applicants
     }
 
-    return render(request, 'jobapp/project-dashboard.html', context)
+    return render(request, 'projectapp/project-dashboard.html', context)
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
-def delete_job_view(request, id):
+@user_is_buyer
+def delete_project_view(request, id):
 
-    job = get_object_or_404(Job, id=id, user=request.user.id)
+    project = get_object_or_404(Project, id=id, user=request.user.id)
 
-    if job:
+    if project:
 
-        job.delete()
-        messages.success(request, 'Your Job Post was successfully deleted!')
+        project.delete()
+        messages.success(request, 'Your Project Post was successfully deleted!')
 
-    return redirect('jobapp:dashboard')
+    return redirect('projectapp:project-dashboard')
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
-def make_complete_job_view(request, id):
-    job = get_object_or_404(Job, id=id, user=request.user.id)
+@user_is_buyer
+def make_complete_project_view(request, id):
+    project = get_object_or_404(Project, id=id, user=request.user.id)
 
-    if job:
+    if project:
         try:
-            job.is_closed = True
-            job.save()
-            messages.success(request, 'Your Job was marked closed!')
+            project.is_closed = True
+            project.save()
+            messages.success(request, 'Your Project was marked closed!')
         except:
-            messages.success(request, 'Something went wrong !')
+            messages.warning(request, 'Something went wrong !')
             
-    return redirect('jobapp:project-dashboard')
+    return redirect('projectapp:project-dashboard')
 
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
+@user_is_buyer
 def all_applicants_view(request, id):
 
-    all_applicants = Applicant.objects.filter(job=id)
+    all_applicants = Applicant.objects.filter(project=id)
 
     context = {
 
         'all_applicants': all_applicants
     }
 
-    return render(request, 'jobapp/all-applicants.html', context)
+    return render(request, 'projectapp/all-applicants.html', context)
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
+@user_is_farmer
 def delete_bookmark_view(request, id):
 
-    job = get_object_or_404(BookmarkJob, id=id, user=request.user.id)
+    project = get_object_or_404(BookmarkProject, id=id, user=request.user.id)
 
-    if job:
+    if project:
 
-        job.delete()
-        messages.success(request, 'Saved Job was successfully deleted!')
+        project.delete()
+        messages.success(request, 'Saved Project was successfully deleted!')
 
-    return redirect('jobapp:dashboard')
+    return redirect('projectapp:dashboard')
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
+@user_is_buyer
 def applicant_details_view(request, id):
 
     applicant = get_object_or_404(user=request.user, id=id)
@@ -1043,86 +1007,17 @@ def applicant_details_view(request, id):
         'applicant': applicant
     }
 
-    return render(request, 'jobapp/applicant-details.html', context)
-
-
-# @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
-# def job_bookmark_view(request, id):
-
-#     form = JobBookmarkForm(request.POST or None)
-
-#     user = get_object_or_404(user=request.user, id=request.user.id)
-#     applicant = BookmarkJob.objects.filter(user=request.user.id, job=id)
-
-#     if not applicant:
-#         if request.method == 'POST':
-
-#             if form.is_valid():
-#                 instance = form.save(commit=False)
-#                 instance.user = user
-#                 instance.save()
-
-#                 messages.success(
-#                     request, 'You have successfully save this job!')
-#                 return redirect(reverse("jobapp:single-job", kwargs={
-#                     'id': id
-#                 }))
-
-#         else:
-#             return redirect(reverse("jobapp:single-job", kwargs={
-#                 'id': id
-#             }))
-
-#     else:
-#         messages.error(request, 'You already saved this Job!')
-
-#         return redirect(reverse("jobapp:single-job", kwargs={
-#             'id': id
-#         }))
-
-# from django.shortcuts import get_object_or_404
-# from django.contrib.auth.decorators import login_required
-# from django.urls import reverse
-# from django.http import HttpResponseRedirect
-# from django.contrib import messages
+    return render(request, 'projectapp/applicant-details.html', context)
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
-# def job_bookmark_view(request, id):
-#     form = JobBookmarkForm(request.POST or None)
-
-#     user = get_object_or_404(User, id=request.user.id)
-#     bookmark = get_object_or_404(BookmarkJob, user=user, job=id)
-
-#     if request.method == 'POST':
-#         if form.is_valid():
-#             instance = form.save(commit=False)
-#             instance.user = user
-#             instance.save()
-
-#             messages.success(request, 'You have successfully saved this job!')
-#             return HttpResponseRedirect(reverse("jobapp:single-job", kwargs={'id': id}))
-#     else:
-#         messages.error(request, 'You already saved this job!')
-    
-#     return HttpResponseRedirect(reverse("jobapp:single-job", kwargs={'id': id}))
-
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-
-# @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employee
-def job_bookmark_view(request, id):
-    form = JobBookmarkForm(request.POST or None)
+@user_is_farmer
+def project_bookmark_view(request, id):
+    form = ProjectBookmarkForm(request.POST or None)
 
     user = request.user
     try:
-        bookmark = BookmarkJob.objects.get(user=user, job=id)
-    except BookmarkJob.DoesNotExist:
+        bookmark = BookmarkProject.objects.get(user=user, project=id)
+    except BookmarkProject.DoesNotExist:
         bookmark = None
 
     if request.method == 'POST':
@@ -1131,33 +1026,33 @@ def job_bookmark_view(request, id):
             instance.user = user
             instance.save()
 
-            messages.success(request, 'You have successfully saved this job!')
-            return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+            messages.success(request, 'You have successfully saved this project!')
+            return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
     else:
         if bookmark is None:
-            messages.error(request, 'You already saved this job!')
+            messages.error(request, 'You already saved this project!')
     
-    return HttpResponseRedirect(reverse("core:single-job", kwargs={'id': id}))
+    return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-# @user_is_employer
-def job_edit_view(request, id=id):
+@user_is_buyer
+def project_edit_view(request, id=id):
     """
-    Handle Job Update
+    Handle Project Update
 
     """
 
-    job = get_object_or_404(Job, id=id, user=request.user.id)
+    project = get_object_or_404(Project, id=id, user=request.user.id)
     categories = ProjectCategory.objects.all()
-    form = JobEditForm(request.POST or None, instance=job)
+    form = ProjectEditForm(request.POST or None, instance=project)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.save()
         # for save tags
         # form.save_m2m()
-        messages.success(request, 'Your Job Post Was Successfully Updated!')
-        return redirect(reverse("jobapp:single-job", kwargs={
+        messages.success(request, 'Your Project Post Was Successfully Updated!')
+        return redirect(reverse("projectapp:single-project", kwargs={
             'id': instance.id
         }))
     context = {
@@ -1166,4 +1061,161 @@ def job_edit_view(request, id=id):
         'categories': categories
     }
 
-    return render(request, 'jobapp/job-edit.html', context)
+    return render(request, 'projectapp/project-edit.html', context)
+
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
+from django.db.models import Q
+from django.views.generic import ListView
+from blogs.models import Blog, BlogCategory, Bookmark, BlogCategory
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
+
+class Index(View):
+    def get(self, request):
+        latest_blogs = Blog.objects.filter(is_active=True, is_published=True)[:6]
+        popular = Blog.objects.filter(is_active=True, is_published=True).order_by("-views")[:3]
+        return render(request, "index.html", {"latest": latest_blogs, "popular": popular})
+
+class Trendings(ListView):
+    model = Blog
+    template_name = 'trendings.html'
+    context_object_name = 'blogs'
+    paginate_by = 9
+
+    def get_queryset(self):
+        return Blog.objects.filter(is_active=True).order_by("-views")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.object_list, self.get_paginate_by(self.object_list))
+        page = self.request.GET.get("page")
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        context["blogs"] = blogs
+        return context
+
+class Popular(ListView):
+    model = Blog
+    template_name = 'popular.html'
+    context_object_name = 'blogs'
+    paginate_by = 9
+
+    def get_queryset(self):
+        return Blog.objects.filter(is_active=True).order_by("-views")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.object_list, self.get_paginate_by(self.object_list))
+        page = self.request.GET.get("page")
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        context["blogs"] = blogs
+        return context
+
+class Latest(ListView):
+    model = Blog
+    template_name = 'latest.html'
+    context_object_name = 'blogs'
+    paginate_by = 9
+
+    def get_queryset(self):
+        return Blog.objects.filter(is_active=True).order_by("-published_on")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.object_list, self.get_paginate_by(self.object_list))
+        page = self.request.GET.get("page")
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        context["blogs"] = blogs
+        return context
+
+class Search(ListView):
+    model = Blog
+    template_name = "search.html"
+    context_object_name = "blogs"
+    paginate_by = 9
+
+    def get_queryset(self):
+        query = self.request.GET.get("query", "")
+        blogs = Blog.objects.filter(
+            (Q(title__icontains=query) | Q(desc__icontains=query)), is_active=True
+        ).order_by("-views")
+        return blogs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.object_list, self.get_paginate_by(self.object_list))
+        page = self.request.GET.get("page")
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            blogs = paginator.page(1)
+        except EmptyPage:
+            blogs = paginator.page(paginator.num_pages)
+
+        context["blogs"] = blogs
+        context["query"] = self.request.GET.get("query")
+        return context
+
+class BlogCategoryView(View):
+    def get(self, request):
+        blogcategories = BlogCategory.objects.all()
+        return render(request, "blogcategory.html", {"blogcategories": blogcategories})
+
+class GetBlogCategory(View):
+    def get(self, request, cat):
+        blogcategory = get_object_or_404(BlogCategory.objects.filter(slug=cat, is_active=True))
+        return render(request, "get_blogcategory.html", {"blogcategory": blogcategory})
+
+class TermsAndConditions(View):
+    def get(self, request):
+        return render(request, "terms-and-conditions.html")
+
+class BookmarkView(ListView):
+    model = Bookmark
+    template_name = 'bookmark.html'
+    context_object_name = 'bookmarks'
+    paginate_by = 9
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            messages.warning(requests.request, "Auth required")
+            return redirect("accounts:login")
+        return Bookmark.objects.filter(creator=self.request.user).order_by("-created_on")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paginator = Paginator(self.object_list, self.get_paginate_by(self.object_list))
+        page = self.request.GET.get("page")
+
+        try:
+            bookmarks = paginator.page(page)
+        except PageNotAnInteger:
+            bookmarks = paginator.page(1)
+        except EmptyPage:
+            bookmarks = paginator.page(paginator.num_pages)
+
+        context["bookmarks"] = bookmarks
+        return context

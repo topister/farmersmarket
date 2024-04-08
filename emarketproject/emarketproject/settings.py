@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
      # created apps
+    'blogs',
+    'management',
     'core',
     'account',
     'userauths',
@@ -248,11 +250,10 @@ JAZZMIN_SETTINGS = {
 }
 
 
-# AUTH_USER_MODEL = 'userauths.User'
 AUTH_USER_MODEL = 'userauths.User'
 
 
-LOGIN_URL = 'userauths:signIn'
+LOGIN_URL = 'userauths:login'
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 

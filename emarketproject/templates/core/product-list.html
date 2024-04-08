@@ -125,10 +125,13 @@
                                                 </div>
                                         
 
+                                               
+
                                                 <div class="product-card-bottom">
                                                     <div class="product-price">
-                                                        <span>ksh.</span><span class="curr-prod-price-{{prod.id}}">{{prod.price}}</span>
-                                                        <span class="old-price">ksh.{{prod.old_price}}</span>
+                                                        <span>$.</span><span class="curr-prod-price-{{prod.id}}">{{prod.price}}</span>
+
+                                                        <span class="old-price">$.{{prod.old_price}}</span>
                                                     </div>
                                                     <div class="add-cart">
                                                         <input type="hidden" value="1" id="product-quantity" class="product-quantity-{{ prod.id }}">
@@ -136,7 +139,12 @@
                                                         <input type="hidden" class="product-image-{{ prod.id }}" value="{{ prod.image.url }}">
                                                         <input type="hidden" class="product-id-{{ prod.id }}" value="{{ prod.id }}">
                                                         <input type="hidden" class="product-title-{{ prod.id }}" value="{{ prod.title }}">
-                                                        <button class="add add-to-cart-btn" data-index="{{prod.id}}" id="add-to-cart-btn" style="border: none;" ><i class="fi-rs-shopping-cart mr-5"></i>Add </button>
+
+                                                        <div class="d-flex">
+                                                            <button class="add add-to-cart-btn" data-index="{{prod.id}}" id="add-to-cart-btn" style="border: none;" ><i class="fi-rs-shopping-cart mr-5"></i>Add </button>
+                                                            <button style="border: none; background: none;" class="add-to-wishlist" data-product-item="{{ prod.id }}"><i class="fi-rs-heart" style="fill: aqua;"></i></button>
+
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

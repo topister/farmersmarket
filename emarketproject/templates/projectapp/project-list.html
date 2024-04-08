@@ -1,0 +1,54 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- HOME -->
+<div class="main">
+<div class="page-header breadcrumb-wrap">
+  <div class="container">
+      <div class="breadcrumb">
+          <a href="{% url 'core:index' %}" rel="nofollow"><i class="fi-rs-home mr-5"></i>Home</a>
+          <span></span> Projects 
+      </div>
+  </div>
+</div>
+
+<section id="ajax_listing_paginattion" class="site-section services-section bg-light block__62849" id="next-section">
+  <div class="container">
+
+    <div class="row">
+      {% for project in page_obj %}
+      <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
+        <a href="{% url 'core:single-project' project.id %}" class="block__16443 min-h text-center d-block">
+          <span class="custom-icon mx-auto"><span class="icon-magnet d-block"></span></span>
+          <h3>{{ project.title }}</h3>
+          <ul class="project-listing-meta list-unstyled pl-3 mb-0">
+            <li class="menu-fix mb-2">
+              {% if project.project_type == '1' %}
+              <span class="badge badge-primary">
+                Full Time
+              </span>
+              {% elif project.project_type == '2'%}
+              <span class="badge badge-danger">
+                Part Time
+              </span>
+              {% else  %}
+              <span class="badge badge-info">
+                Internship
+              </span>
+              {% endif %}</li>
+            <li class="badge badge-secondary menu-fix mb-2"> {{ project.location }}</li>
+          </ul>
+          <p>{{ project.description | safe | truncatechars:150}}</p>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% include 'projectapp/paginator.html' %}
+
+  </div>
+</section>
+
+</div>
+
+{% endblock content %}

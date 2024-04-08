@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect , get_object_or_404
 from django.urls import reverse, reverse_lazy
 
 from account.forms import *
-from core.permission import user_is_employee 
+from core.permission import user_is_farmer 
 
 
 def get_success_url(request):
@@ -22,13 +22,13 @@ def get_success_url(request):
 
 
 
-def employee_registration(request):
+def farmer_registration(request):
 
     """
-    Handle Employee Registration
+    Handle Farmer Registration
 
     """
-    form = EmployeeRegistrationForm(request.POST or None)
+    form = FarmerRegistrationForm(request.POST or None)
     if form.is_valid():
         form = form.save()
         return redirect('account:login')
@@ -37,17 +37,17 @@ def employee_registration(request):
             'form':form
         }
 
-    return render(request,'account/employee-registration.html',context)
+    return render(request,'account/farmer-registration.html',context)
 
 
-def employer_registration(request):
-
-    """
-    Handle Employee Registration 
+def buyer_registration(request):
 
     """
+    Handle Buyer Registration 
 
-    form = EmployerRegistrationForm(request.POST or None)
+    """
+
+    form = BuyerRegistrationForm(request.POST or None)
     if form.is_valid():
         form = form.save()
         return redirect('account:login')
@@ -56,20 +56,20 @@ def employer_registration(request):
             'form':form
         }
 
-    return render(request,'account/employer-registration.html',context)
+    return render(request,'account/buyer-registration.html',context)
 
 
 @login_required(login_url=reverse_lazy('accounts:login'))
-@user_is_employee
-def employee_edit_profile(request, id=id):
+@user_is_farmer
+def farmer_edit_profile(request, id=id):
 
     """
-    Handle Employee Profile Update Functionality
+    Handle Farmer Profile Update Functionality
 
     """
 
     user = get_object_or_404(User, id=id)
-    form = EmployeeProfileEditForm(request.POST or None, instance=user)
+    form = FarmerProfileEditForm(request.POST or None, instance=user)
     if form.is_valid():
         form = form.save()
         messages.success(request, 'Your Profile Was Successfully Updated!')
@@ -81,7 +81,7 @@ def employee_edit_profile(request, id=id):
             'form':form
         }
 
-    return render(request,'account/employee-edit-profile.html',context)
+    return render(request,'account/farmer-edit-profile.html',context)
 
 
 

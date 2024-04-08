@@ -25,12 +25,17 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("core.urls")),
-    path("account/", include("account.urls")),
+    
+    # path("account/", include("account.urls")),
     path("user/", include("userauths.urls")),
+    path("blogs/", include("blogs.urls")),
+    path("management/", include("management.urls")),
 
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 
     path("ckeditor/", include("ckeditor_uploader.urls")), #For CKEditor5
+
+    
     
 ]
 

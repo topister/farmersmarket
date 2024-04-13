@@ -1,1 +1,1 @@
- web: gunicorn emarketproject.wsgi
+web: gunicorn 'emarketproject.wsgi'

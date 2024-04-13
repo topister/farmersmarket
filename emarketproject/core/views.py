@@ -2,7 +2,7 @@ from ast import Module
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 import requests
-from core.models import Applicant, BookmarkProject, Buyer, Project, Product, Category,ProjectCategory, Farmer, Expert, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
+from core.models import Applicant, BookmarkProject, Buyer, Coupon, Project, Product, Category,ProjectCategory, Farmer, Expert, CartOrder, CartItems, Wishlist, Address, ProductReview, ProductImages, ContactUs
 from django.http import JsonResponse
 from core.permission import user_is_farmer, user_is_buyer
 from userauths.models import Profile
@@ -319,6 +319,9 @@ def cart_view_homepage(request):
     cart_total_amount = 0
     if 'cart_dataObj' in request.session:
         for product_id, item in request.session['cart_dataObj'].items():
+            # if item['quantity'] and item['price']:
+            #     cart_total_amount += int(item['quantity']) * float(item['price'])
+
             cart_total_amount += int(item['quantity']) * float(item['price'])
 
         return render(request, "core/cart.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
@@ -435,13 +438,14 @@ def checkout(request):
 
     cart_total_amount = 0
     total = 0
-    order = None  # Initialize order outside the if condition
+    order = None
 
     # checking if cart_dataObj session still exist
     if 'cart_dataObj' in request.session:
         # loop for the total amount for paypal
         for productId, item in request.session['cart_dataObj'].items():
-            total += int(item['quantity']) * float(item['price'])
+            if item['quantity'] and item['price']:
+                total += int(item['quantity']) * float(item['price'])
 
         # creating order object
         order = CartOrder.objects.create(
@@ -462,6 +466,7 @@ def checkout(request):
                 price=item['price'],
                 total=float(item['quantity']) * float(item['price']),
             )
+        
 
     host = request.get_host()
     paypal_dict = {
@@ -469,8 +474,8 @@ def checkout(request):
         'amount': cart_total_amount,
         'currency_code': 'USD',
         'notify_url': 'http://{}{}'.format(host, reverse('core:paypal-ipn')),
-        'return_url': 'http://{}{}'.format(host, reverse('core:paypal-success')),
-        'cancel_return': 'http://{}{}'.format(host, reverse('core:paypal-fail')),
+        'return_url': 'http://{}{}'.format(host, reverse('core:payment-completed')),
+        'cancel_return': 'http://{}{}'.format(host, reverse('core:payment-failed')),
     }
 
     # If order is not None (i.e., it was created)
@@ -486,7 +491,7 @@ def checkout(request):
     try:
         active_address = Address.objects.get(user=request.user, status=True)
     except Address.DoesNotExist:
-        messages.warning(request, "You have multiple addresses, activate only one!")
+        messages.warning(request, "You have multiple addresses or none, activate only one!")
         active_address = None
 
     return render(request, "core/checkout.html", {
@@ -497,20 +502,36 @@ def checkout(request):
         'active_address': active_address
     })
 
-
-@login_required
-def paypal_successful(request):
-
+@csrf_exempt
+def payment_completed_view(request):
     cart_total_amount = 0
-
     if 'cart_dataObj' in request.session:
         for productId, item in request.session['cart_dataObj'].items():
-            cart_total_amount += int(item['quantity']) * float(item['price'])
+            cart_total_amount+= int(item['quantity']) * float(item['price'])
+    # context=request.POST
+    return render(request, 'core/payment-completed.html',{'cart_data':request.session['cart_dataObj'],'totalcartitems':len(request.session['cart_dataObj']),'cart_total_amount':cart_total_amount})
 
-    return render(request, 'core/paypal-success.html',  {'cart_data':request.session['cart_dataObj'],'cartTotalItems':len(request.session['cart_dataObj']),'cart_total_amount':cart_total_amount})
+
+
+# @login_required
+# def paypal_successful(request):
+
+#     cart_total_amount = 0
+
+#     if 'cart_dataObj' in request.session:
+#         for productId, item in request.session['cart_dataObj'].items():
+#             cart_total_amount += int(item['quantity']) * float(item['price'])
+
+#     return render(request, 'core/paypal-success.html',  {'cart_data':request.session['cart_dataObj'],'cartTotalItems':len(request.session['cart_dataObj']),'cart_total_amount':cart_total_amount})
+
+
+
+# @login_required
+# def paypal_failed(request):
+#     return render(request, 'core/paypal-fail.html')
 
 @login_required
-def paypal_failed(request):
+def payment_failed(request):
     return render(request, 'core/paypal-fail.html')
 
 
@@ -779,7 +800,7 @@ def project_list_View(request):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+@user_is_farmer
 def create_project_View(request):
     """
     Provide the ability to create project post
@@ -882,8 +903,15 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_farmer
+
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, reverse
+from django.contrib import messages
+from .forms import ProjectApplyForm
+from .models import Applicant, User
+
+@login_required
 def apply_project_view(request, id):
+    print("ID:", id)
     form = ProjectApplyForm(request.POST or None)
 
     user = get_object_or_404(User, id=request.user.id)
@@ -899,11 +927,37 @@ def apply_project_view(request, id):
 
                 messages.success(request, 'You have successfully applied for this project!')
                 return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
+            else:
+                # If form is not valid, render the single project page with errors
+                return render(request, 'projectapp/project-single.html', {'form': form, 'id': id})
         else:
+            # If request method is not POST, redirect to single project page
             return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
     else:
         messages.error(request, 'You already applied for the Project!')
         return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
+
+# def apply_project_view(request, id):
+#     form = ProjectApplyForm(request.POST or None)
+
+#     user = get_object_or_404(User, id=request.user.id)
+
+#     applicant = Applicant.objects.filter(user=user, project=id)
+
+#     if not applicant:
+#         if request.method == 'POST':
+#             if form.is_valid():
+#                 instance = form.save(commit=False)
+#                 instance.user = user
+#                 instance.save()
+
+#                 messages.success(request, 'You have successfully applied for this project!')
+#                 return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
+#         else:
+#             return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
+#     else:
+#         messages.error(request, 'You already applied for the Project!')
+#         return HttpResponseRedirect(reverse("core:single-project", kwargs={'id': id}))
 
 
 
@@ -938,7 +992,7 @@ def dashboard_view(request):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+# @user_is_buyer
 def delete_project_view(request, id):
 
     project = get_object_or_404(Project, id=id, user=request.user.id)
@@ -952,7 +1006,7 @@ def delete_project_view(request, id):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+# @user_is_buyer
 def make_complete_project_view(request, id):
     project = get_object_or_404(Project, id=id, user=request.user.id)
 
@@ -969,7 +1023,7 @@ def make_complete_project_view(request, id):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+# @user_is_buyer
 def all_applicants_view(request, id):
 
     all_applicants = Applicant.objects.filter(project=id)
@@ -983,7 +1037,7 @@ def all_applicants_view(request, id):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_farmer
+# @user_is_farmer
 def delete_bookmark_view(request, id):
 
     project = get_object_or_404(BookmarkProject, id=id, user=request.user.id)
@@ -997,7 +1051,7 @@ def delete_bookmark_view(request, id):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+# @user_is_buyer
 def applicant_details_view(request, id):
 
     applicant = get_object_or_404(user=request.user, id=id)
@@ -1009,8 +1063,7 @@ def applicant_details_view(request, id):
 
     return render(request, 'projectapp/applicant-details.html', context)
 
-# @login_required(login_url=reverse_lazy('account:login'))
-@user_is_farmer
+
 def project_bookmark_view(request, id):
     form = ProjectBookmarkForm(request.POST or None)
 
@@ -1036,7 +1089,7 @@ def project_bookmark_view(request, id):
 
 
 # @login_required(login_url=reverse_lazy('account:login'))
-@user_is_buyer
+# @user_is_buyer
 def project_edit_view(request, id=id):
     """
     Handle Project Update
@@ -1150,7 +1203,7 @@ class Latest(ListView):
         context["blogs"] = blogs
         return context
 
-class Search(ListView):
+class SearchBlog(ListView):
     model = Blog
     template_name = "search.html"
     context_object_name = "blogs"

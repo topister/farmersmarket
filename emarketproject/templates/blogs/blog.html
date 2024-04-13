@@ -10,12 +10,14 @@
 {% load static %}
 <div class="container mt-5 mb-5">
   <div class="row">
-    <h2>
+    <h2 class="text-center">
       {{ blog.title }}
     </h2>
-  </div>
+  </div> <br>
+  
+  <!-- BLOG POST -->
   <div class="row">
-    <p>Author: {{ blog.creator }} | Views: {{ blog.views }} | Updated: {{ blog.published_on|timesince }} ago</p>
+    <p>Author: {{ blog.creator.first_name }} | Views: {{ blog.views }} | Updated: {{ blog.published_on|timesince }} ago</p>
   </div>
   <div class="row mb-3">
     {% for blogcategory in blog.blogcategories.all %}
@@ -26,7 +28,7 @@
       {% endif %}
     {% endfor %}
   </div>
-  <div class="row">
+  <div class="row" style="margin: 20px;">
     <div class="ratio ratio-16x9">
       <img src="{{ blog.thumbnail.url }}" class="img-fluid rounded mx-auto d-block" alt="blog's thumbnail">
     </div>
@@ -35,7 +37,7 @@
     </p>
   </div>
   <br>
-  <div class="row" id="features">
+  <div class="row" id="features" style="margin: 40px;">
     <div class="col">
       {% if liked %}
       <a href="#" class="text-decoration-none">
@@ -82,13 +84,13 @@
   </div>
   <br><br><hr>
   
-  <div class="row mb-3" id="comments">
+  <div class="row mb-3" id="comments" style="margin: 20px;">
     <h1>
       <i class="bi bi-chat-left-text"></i>
       Comments ({{ comments.count }})
     </h1>
   </div>
-  <div class="row">
+  <div class="row" style="margin: 20px;">
     <form action="{% url 'blogs:create_comment' %}" method="post">
       {% csrf_token %}
       <input type="hidden" name="id" value="{{ blog.id }}">
@@ -120,7 +122,7 @@
     <div class="collapse" id="reply{{comment.id}}">
       <div class="card card-body">
         {% for reply in comment.replies.all %}
-        <b>@{{ reply.creator.username }}<b>
+        <b>@{{ reply.creator.first_name }}<b>
         <span class="badge text-bg-primary">{{ reply.published_on }}</span>
         <p>{{ reply.reply }}</p>
         <hr>

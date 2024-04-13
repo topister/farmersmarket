@@ -8,7 +8,7 @@
   align-items: center;
   flex-direction: column;
   /* margin: 50px;  */
-  padding-left: -300px;
+  padding-left: -200px;
   padding-right: 200px;
   /* margin-right: 50px; */
 }
@@ -28,7 +28,7 @@
 
       <div class="container footer-container">
         <div class="row mb-5 justify-content-between">
-          <div class="col-6 col-md-3 mb-4 mb-md-0">
+          <!-- <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Category</h3>
             <ul class="list-unstyled footer-list">
               <li><a href="#">Web Design</a></li>
@@ -38,30 +38,31 @@
               <li><a href="#">HTML5</a></li>
               <li><a href="#">CSS3</a></li>
             </ul>
-          </div>
+          </div> -->
           <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Company</h3>
             <ul class="list-unstyled footer-list">
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Career</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Resources</a></li>
+              
+              <li><a href="{% url 'core:about-us' %}">About Us</a></li>
+              <li><a href="{% url 'core:expert-list' %}">Our Experts</a></li>
+              <li><a href="{% url 'core:latest' %}">Blog</a></li>
+              <li><a href="{% url 'core:contact' %}">Contact Us</a></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Support</h3>
             <ul class="list-unstyled footer-list">
-              <li><a href="#">Support</a></li>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Terms of Service</a></li>
+              <li><a href="{% url 'core:purchase_guide' %}">Purchase guide</a></li>
+              <li><a href="{% url 'core:privacy_policy' %}">Privacy policy</a></li>
+              <li><a href="{% url 'core:terms_of_service' %}">Terms of Service</a></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">
-            <h3>Contact Us</h3>
+            <h3>Our Socials</h3>
             <div class="footer-social">
               <a href="#"><span class="icon-facebook"></span></a>
-              <a href="#"><span class="icon-twitter"></span></a>
-              <a href="#"><span class="icon-instagram"></span></a>
+              <!-- <a href="#"><span class="icon-twitter"></span></a> -->
+              <!-- <a href="#"><span class="icon-instagram"></span></a> -->
               <a href="#"><span class="icon-linkedin"></span></a>
             </div>
           </div>

@@ -5,10 +5,16 @@ from core.models import BookmarkProject
 register = template.Library()
 
 
-@register.simple_tag(name='is_project_already_saved')
+# @register.simple_tag(name='is_project_already_saved')
+# def is_project_already_saved(project, user):
+#     applied = BookmarkProject.objects.filter(project=project, user=user)
+#     if applied:
+#         return True
+#     else:
+#         return False
+    
+
+@register.simple_tag
 def is_project_already_saved(project, user):
-    applied = BookmarkProject.objects.filter(project=project, user=user)
-    if applied:
-        return True
-    else:
-        return False
+    applied = BookmarkProject.objects.filter(project=project, user=user).exists()
+    return applied

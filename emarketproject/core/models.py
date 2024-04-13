@@ -212,6 +212,10 @@ class Expert(models.Model):
     authentic_rating = models.CharField(max_length=100, default="98")
     # days_return = models.CharField(max_length=100, default="7")
     # warranty_period = models.CharField(max_length=100, default="4")
+    twitter = models.URLField(max_length=500, null=True, blank=True)
+    facebook = models.URLField(max_length=500, null=True, blank=True)
+    instagram = models.URLField(max_length=500, null=True, blank=True)
+    pinterest = models.URLField(max_length=500, null=True, blank=True)
     # Whenever the farmer is deleted his/her shop is not deleted
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
@@ -281,6 +285,8 @@ class CartOrder(models.Model):
     paid_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
     product_status = models.CharField(choices=STATUS_CHOICE, max_length=40, default="processing")
+    coupons = models.ManyToManyField("core.Coupon", blank=True)
+    oid = ShortUUIDField(null=True, blank=True, length=5, max_length=10, alphabet='0123456789')
     
     class Meta:
         verbose_name_plural = "Cart Order"
@@ -433,3 +439,11 @@ class BookmarkProject(models.Model):
 
     def __str__(self):
         return self.project.title
+    
+class Coupon(models.Model):
+    code = models.CharField(max_length=10)
+    discount = models.IntegerField(default=1)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code

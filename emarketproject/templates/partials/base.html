@@ -176,12 +176,10 @@
                     </div>
                     <div class="header-right">
                         <div class="search-style-2">
-                            <form action="{% url 'core:search' %}" method="GET">
+                            <form action="{% url 'core:searchproduct' %}" method="GET">
                                 <select class="select-active">
                                     <option value="" selected="selected">All Categories</option>
-                                    <!-- {% for category in categories %} -->
-                                    <!-- <option value="{{category.id}}">{{category.title}}</option> -->
-                                    <!-- {% endfor %}  -->
+                                    
                                     <option>
                                     <ul class="sub-menu">
                                         {% for category in categories %}
@@ -189,18 +187,14 @@
                                         {% endfor %}
                                                              
                                     </ul>
-                                    </option>    
-
-                                                                       
-                                        
-                                    
+                                    </option>                                                                                                                            
                                 </select>
                                 <input type="text" placeholder="Search for items..." name="q" />
                                 <button class="fa fa-search" type="submit"></button>
                             </form>
                         </div>
-                        <div class="header-action-right">
-                            <div class="header-action-2">
+                        <div class="header-action-right" >
+                            <div class="header-action-2" >
                                 <div class="search-location">
                                     <form action="#">
                                         <select class="select-active">
@@ -251,17 +245,17 @@
 
                                 {% if request.user.is_authenticated %}
                                 <div class="header-action-icon-2">
-                                    <a href="page-account.html">
+                                    <a href="#">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-user.svg' %}" />
                                     </a>
-                                    <a href="page-account.html"><span class="lable ml-0">Account</span></a>
+                                    <a href="{% url 'core:dashboard' %}"><span class="lable ml-0">Account</span></a>
                                     <div class="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
                                         <ul>
                                             <li><a href="{% url 'core:dashboard' %}"><i class="fi fi-rs-user mr-10"></i>My Account</a></li>
                                             <li><a href="{% url 'core:wishlist' %}"><i class="fi fi-rs-heart mr-10"></i>My Wishlist</a></li>
                                             <li><a href="{% url 'core:purchase_guide' %}"><i class="fa-solid fa-money-bill-wave mr-10"></i>Purchase Guide</a></li>
                                             <li><a href="{% url 'core:privacy_policy' %}"><i class="fi fi-rs-label mr-10"></i>Privacy Policy</a></li>
-                                            <li><a href="{% url 'core:terms_of_service' %}"><i class="fi fi-rs-settings-sliders mr-10"></i>Terms of Service</a></li>
+                                            <!-- <li><a href="{% url 'core:terms_of_service' %}"><i class="fi fi-rs-settings-sliders mr-10"></i>Terms of Service</a></li> -->
                                             <li><a href="{% url 'userauths:logout' %}"><i class="fi fi-rs-sign-out mr-10"></i>Logout</a></li>
                                         </ul>
                                     </div>
@@ -328,55 +322,19 @@
                                     <li>
                                         <a href="{% url 'core:farmer-list' %}">Farmers</a>
                                     </li>
-                                    <li>
-                                        <a href="{% url 'core:buyer-list' %}">Buyers</a>
-                                    </li>                                 
+                                                                     
                                     
                                     
-                                    <li>
-                                        <a href="{% url 'core:search_result' %}">Projects</a>
-                                    </li>
-
                                     <!-- <li>
-                                        <a href="#">Buyers <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="vendors-grid.html">Vendors Grid</a></li>
-                                            <li><a href="vendors-list.html">Vendors List</a></li>
-                                            <li><a href="vendor-details-1.html">Vendor Details 01</a></li>
-                                            <li><a href="vendor-details-2.html">Vendor Details 02</a></li>
-                                            <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
-                                            <li><a href="vendor-guide.html">Vendor Guide</a></li>
-                                        </ul>
-                                    </li> -->                          
-
-                            
-
+                                        <a href="{% url 'core:search_result' %}">Projects</a>
+                                    </li>              -->
                                     <li>
                                         <a href="{% url 'core:expert-list' %}">Agri Experts</a>
                                     </li>
 
                                     <li>
                                         <a href="{% url 'core:latest' %}">Blog</a>
-                                    </li>
-
-                                    
-                                    
-                                    <li>
-                                        <a href="#">Pages <i class="fi-rs-angle-down"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="page-about.html">About Us</a></li>
-                                            <li><a href="{% url 'core:contact' %}">Contact</a></li>
-                                            <li><a href="page-account.html">My Account</a></li>
-                                            <li><a href="page-login.html">Login</a></li>
-                                            <li><a href="page-register.html">Register</a></li>
-                                            <li><a href="page-forgot-password.html">Forgot password</a></li>
-                                            <li><a href="page-reset-password.html">Reset password</a></li>
-                                            <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                            <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                            <li><a href="page-terms.html">Terms of Service</a></li>
-                                            <li><a href="page-404.html">404 Page</a></li>
-                                        </ul>
-                                    </li>
+                                    </li>                                      
                                     <li>
                                         <a href="{% url 'core:contact' %}">Contact</a>
                                     </li>
@@ -490,126 +448,29 @@
                     <nav>
                         <ul class="mobile-menu font-heading">
                             <li class="menu-item-has-children">
-                                <a href="index.html">Home</a>
-                                <ul class="dropdown">
-                                    <li><a href="index.html">Home 1</a></li>
-                                    <li><a href="index-2.html">Home 2</a></li>
-                                    <li><a href="index-3.html">Home 3</a></li>
-                                    <li><a href="index-4.html">Home 4</a></li>
-                                    <li><a href="index-5.html">Home 5</a></li>
-                                    <li><a href="index-6.html">Home 6</a></li>
-                                </ul>
+                                <a href="{% url 'core:product-list' %}">Home</a>
+                                
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="shop-grid-right.html">shop</a>
-                                <ul class="dropdown">
-                                    <li><a href="shop-grid-right.html">Shop Grid – Right Sidebar</a></li>
-                                    <li><a href="shop-grid-left.html">Shop Grid – Left Sidebar</a></li>
-                                    <li><a href="shop-list-right.html">Shop List – Right Sidebar</a></li>
-                                    <li><a href="shop-list-left.html">Shop List – Left Sidebar</a></li>
-                                    <li><a href="shop-fullwidth.html">Shop - Wide</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Single Product</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Product – Right Sidebar</a></li>
-                                            <li><a href="shop-product-left.html">Product – Left Sidebar</a></li>
-                                            <li><a href="shop-product-full.html">Product – No sidebar</a></li>
-                                            <li><a href="shop-product-vendor.html">Product – Vendor Infor</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop-filter.html">Shop – Filter</a></li>
-                                    <li><a href="{% url 'core:wishlist' %}">Shop – Wishlist</a></li>
-                                    <li><a href="{% url 'core:cart' %}">Shop – Cart</a></li>
-                                    <li><a href="{% url 'core:checkout' %}">Shop – Checkout</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Shop Invoice</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-invoice-1.html">Shop Invoice 1</a></li>
-                                            <li><a href="shop-invoice-2.html">Shop Invoice 2</a></li>
-                                            <li><a href="shop-invoice-3.html">Shop Invoice 3</a></li>
-                                            <li><a href="shop-invoice-4.html">Shop Invoice 4</a></li>
-                                            <li><a href="shop-invoice-5.html">Shop Invoice 5</a></li>
-                                            <li><a href="shop-invoice-6.html">Shop Invoice 6</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'core:product-list' %}">Categories</a>
+                                
+                            </li>
+                            <li class="menu-item-has-children">                                
+                                <a href="{% url 'core:farmer-list' %}">Farmers</a>      
                             </li>
                             <li class="menu-item-has-children">
-                                <a href="#">Vendors</a>
-                                <ul class="dropdown">
-                                    <li><a href="vendors-grid.html">Vendors Grid</a></li>
-                                    <li><a href="vendors-list.html">Vendors List</a></li>
-                                    <li><a href="vendor-details-1.html">Vendor Details 01</a></li>
-                                    <li><a href="vendor-details-2.html">Vendor Details 02</a></li>
-                                    <li><a href="vendor-dashboard.html">Vendor Dashboard</a></li>
-                                    <li><a href="vendor-guide.html">Vendor Guide</a></li>
-                                </ul>
+                                <a href="{% url 'core:expert-list' %}">Agri Experts</a>
                             </li>
+
                             <li class="menu-item-has-children">
-                                <a href="#">Mega menu</a>
-                                <ul class="dropdown">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Women's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Dresses</a></li>
-                                            <li><a href="shop-product-right.html">Blouses & Shirts</a></li>
-                                            <li><a href="shop-product-right.html">Hoodies & Sweatshirts</a></li>
-                                            <li><a href="shop-product-right.html">Women's Sets</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Men's Fashion</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Jackets</a></li>
-                                            <li><a href="shop-product-right.html">Casual Faux Leather</a></li>
-                                            <li><a href="shop-product-right.html">Genuine Leather</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Technology</a>
-                                        <ul class="dropdown">
-                                            <li><a href="shop-product-right.html">Gaming Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Ultraslim Laptops</a></li>
-                                            <li><a href="shop-product-right.html">Tablets</a></li>
-                                            <li><a href="shop-product-right.html">Laptop Accessories</a></li>
-                                            <li><a href="shop-product-right.html">Tablet Accessories</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
+                                <a href="{% url 'core:latest' %}">Blog</a>
+                            </li>                                      
                             <li class="menu-item-has-children">
-                                <a href="blog-category-fullwidth.html">Blog</a>
-                                <ul class="dropdown">
-                                    <li><a href="blog-category-grid.html">Blog Category Grid</a></li>
-                                    <li><a href="blog-category-list.html">Blog Category List</a></li>
-                                    <li><a href="blog-category-big.html">Blog Category Big</a></li>
-                                    <li><a href="blog-category-fullwidth.html">Blog Category Wide</a></li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Single Product Layout</a>
-                                        <ul class="dropdown">
-                                            <li><a href="blog-post-left.html">Left Sidebar</a></li>
-                                            <li><a href="blog-post-right.html">Right Sidebar</a></li>
-                                            <li><a href="blog-post-fullwidth.html">No Sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'core:contact' %}">Contact</a>
                             </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Pages</a>
-                                <ul class="dropdown">
-                                    <li><a href="page-about.html">About Us</a></li>
-                                    <li><a href="{% url 'core:contact' %}">Contact</a></li>
-                                    <li><a href="page-account.html">My Account</a></li>
-                                    <li><a href="page-login.html">Login</a></li>
-                                    <li><a href="page-register.html">Register</a></li>
-                                    <li><a href="page-forgot-password.html">Forgot password</a></li>
-                                    <li><a href="page-reset-password.html">Reset password</a></li>
-                                    <li><a href="page-purchase-guide.html">Purchase Guide</a></li>
-                                    <li><a href="page-privacy-policy.html">Privacy Policy</a></li>
-                                    <li><a href="page-terms.html">Terms of Service</a></li>
-                                    <li><a href="page-404.html">404 Page</a></li>
-                                </ul>
-                            </li>
+                           
+                            
+                            
                             <li class="menu-item-has-children">
                                 <a href="#">Language</a>
                                 <ul class="dropdown">
@@ -628,10 +489,10 @@
                         <a href="{% url 'core:contact' %}"><i class="fi-rs-marker"></i> Our location </a>
                     </div>
                     <div class="single-mobile-header-info">
-                        <a href="page-login.html"><i class="fi-rs-user"></i>Log In / Sign Up </a>
+                        <a href="{% url 'userauths:login' %}"><i class="fi-rs-user"></i>Log In / Sign Up </a>
                     </div>
                     <div class="single-mobile-header-info">
-                        <a href="#"><i class="fi-rs-headphones"></i>(+01) - 2345 - 6789 </a>
+                        <a href="#"><i class="fi-rs-headphones"></i>+254740298531 </a>
                     </div>
                 </div>
                 <div class="mobile-social-icon mb-50">
@@ -642,7 +503,7 @@
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-pinterest-white.svg' %}" alt="" /></a>
                     <a href="#"><img src="{% static 'assets/imgs/theme/icons/icon-youtube-white.svg' %}" alt="" /></a>
                 </div>
-                <div class="site-copyright">Copyright 2024 © <em>Digify</em>. All rights reserved.</div>
+                <div class="site-copyright">Copyright 2024 © <em>DigiFarm</em>. All rights reserved.</div>
             </div>
         </div>
     </div>
@@ -667,10 +528,7 @@
                             <button id="subscribe-btn" class="btn" type="submit">Subscribe</button>
                         </form>
                         
-                        <!-- <form class="form-subcriber d-flex">
-                            <input type="email" placeholder="Your emaill address" />
-                            <button class="btn" type="submit">Subscribe</button>
-                        </form> -->
+                       
                     </div>
                     <img src="{% static 'assets/imgs/banner/banner-9.png' %}" alt="newsletter" />
                 </div>
@@ -740,7 +598,7 @@
                 data: { email: email },
                 success: function(response) {
                     // Handle successful subscription (e.g., display a success message)
-                    alert('You have been successfully subscribed!');
+                    alert('You have successfully subscribed!');
                     $('#email-input').val(''); // Clear the input field
                 },
                 error: function(xhr, status, error) {

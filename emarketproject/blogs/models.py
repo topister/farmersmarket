@@ -70,7 +70,7 @@ class Bookmark(models.Model):
     created_on = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f"Bookmark({self.id}, {self.creater.username})"
+        return f"Bookmark({self.id}, {self.creator.username})"
 
 class BlogLike(models.Model):
     blog = models.ForeignKey(to=Blog, on_delete=models.SET_NULL, related_name="likes", null=True, blank=True)

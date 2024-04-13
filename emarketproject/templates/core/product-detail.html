@@ -67,10 +67,10 @@
                                             </div>
                                             <div class="clearfix product-price-cover">
                                                 <div class="product-price primary-color float-left">
-                                                    <span class="current-price text-brand">$.</span><span class="current-price text-brand" id="curr-prod-price">{{product.price}}</span>
+                                                    <span class="current-price text-brand" style="font-size: 14px;">ksh.</span><span class="current-price text-brand" id="curr-prod-price" style="font-size: 14px;">{{product.price}}</span>
                                                     <span>
                                                         <span class="save-price font-md color3 ml-15">-{{product.get_discount_percentage|floatformat:0}}%</span>
-                                                    <span class="old-price font-md ml-15">$.{{product.old_price}}</span>
+                                                    <span class="old-price font-md ml-15" style="font-size: 14px;">ksh.{{product.old_price}}</span>
                                                     </span>
                                                 </div>
                                             </div>
@@ -85,9 +85,9 @@
                                                     <span class="action text-center" data-title="Refresh"><button style="border: none; background: none;"  class="text-body update-product" data-product="{{ product_id }}"><i class="fi-rs-refresh"></i></button></span>
 
                                                     <div class="product-price">
-                                                        <span>$.</span><span class="curr-prod-price-{{product.id}}">{{product.price}}</span>
+                                                        <span style="font-size: 14px;">ksh.</span><span class="curr-prod-price-{{product.id}}" style="font-size: 14px;">{{product.price}}</span>
 
-                                                        <span class="old-price">$.{{product.old_price}}</span>
+                                                        <span class="old-price" style="font-size: 14px;">ksh.{{product.old_price}}</span>
                                                     </div>
                                                 
                                                 <div class="product-extra-link2">
@@ -142,7 +142,7 @@
                                                     <br><br>
                                                     <div class="vendor-name ml-15">
                                                         <h6>
-                                                            <a href="vendor-details-2.html">{{product.farmer.title}}</a>
+                                                            <a href="{% url 'core:farmer-detail' product.farmer.farmerId %}">{{product.farmer.title}}</a>
                                                         </h6>
                                                         <div class="product-rate-cover text-end">
                                                             <div class="product-rate d-inline-block">
@@ -345,7 +345,7 @@
                                     </li>
                                     <li class="hr"><span></span></li>
                                 </ul>
-                                <h5 class="section-title style-3 mb-20">Return & Warranty</h5>
+                                <h6 class="section-title style-3 mb-20">Return & Warranty</h6>
                                 <ul>
                                     <li>
                                         <i class="fi fi-rs-shield-check mr-8 text-brand"></i>
@@ -361,149 +361,8 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="sidebar-widget widget-vendor mb-30 bg-grey-9 box-shadow-none">
-                                <h5 class="section-title style-3 mb-20">Farmer</h5>
-                                <div class="vendor-logo d-flex mb-30">
-                                    <img src="{{product.farmer.image.url}}" alt="product image" style="width: 100px; height: 100px; border-radius: 50%;" />
-                                    <div class="vendor-name ml-10">
-                                        <h6>
-                                            <a href="vendor-details-2.html">{{product.farmer.title}}</a>
-                                        </h6>
-                                        <div class="product-rate-cover text-end">
-                                            <div class="product-rate d-inline-block">
-                                                <div class="product-rating" style="width: 90%"></div>
-                                            </div>
-                                            <br>
-                                            
-                                            <span class="font-small text-muted"> (32 reviews)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="contact-infor">
-                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-location.svg' %}" alt="" /><strong>Address: </strong> <span>{{product.farmer.address}}</span></li>
-                                    <li><img src="{% static 'assets/imgs/theme/icons/icon-contact.svg' %}" alt="" /><strong>Contact:</strong><span>{{product.farmer.contact}}</span></li>
-                                    <li class="hr"><span></span></li>
-                                </ul>
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <p class="text-brand font-xs">Rating</p>
-                                        <h6 class="mb-0 text-center">92%</h6>
-                                    </div>
-                                    <div>
-                                        <p class="text-brand font-xs">Ship on time</p>
-                                        <h6 class="mb-0 text-center">{{product.farmer.shipping_on_time}}%</h6>
-                                    </div>
-                                    <div>
-                                        <p class="text-brand font-xs">Chat response</p>
-                                        <h6 class="mb-0 text-center">{{product.farmer.chat_response_time}}%</h6>
-                                    </div>
-                                </div>
-                                <ul>
-                                    <li class="hr"><span></span></li>
-                                </ul>
-                                <p>Become a Farmer? <a href="page-register.html"> Register now</a></p>
-                            </div>
-                            <!-- <div class="sidebar-widget widget-category-2 mb-30">
-                                <h5 class="section-title style-1 mb-30">Category</h5>
-                                <ul>
-                                    <li>
-                                        <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-1.svg' %}" alt="" />Milks & Dairies</a><span class="count">30</span>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-2.svg' %}" alt="" />Clothing</a><span class="count">35</span>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-3.svg' %}" alt="" />Pet Foods </a><span class="count">42</span>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-4.svg' %}" alt="" />Baking material</a><span class="count">68</span>
-                                    </li>
-                                    <li>
-                                        <a href="shop-grid-right.html"> <img src="{% static 'assets/imgs/theme/icons/category-5.svg' %}" alt="" />Fresh Fruit</a><span class="count">87</span>
-                                    </li>
-                                </ul>
-                            </div> -->
-                            <!-- Fillter By Price -->
-                            <div class="sidebar-widget price_range range mb-30">
-                                <h5 class="section-title style-1 mb-30">Fill by price</h5>
-                                <div class="price-filter">
-                                    <div class="price-filter-inner">
-                                        <div id="slider-range" class="mb-20"></div>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="caption">From: <strong id="slider-range-value1" class="text-brand"></strong></div>
-                                            <div class="caption">To: <strong id="slider-range-value2" class="text-brand"></strong></div>
-                                            <br><br><br><br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- <div class="list-group">
-                                    <div class="list-group-item mb-10 mt-10">
-                                        <label class="fw-900">Color</label>
-                                        <div class="custome-checkbox">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox1"><span>Red (56)</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox2" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox2"><span>Green (78)</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox3" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox3"><span>Blue (54)</span></label>
-                                        </div>
-                                        <label class="fw-900 mt-15">Item Condition</label>
-                                        <div class="custome-checkbox">
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox11" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox11"><span>New (1506)</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox21" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox21"><span>Refurbished (27)</span></label>
-                                            <br />
-                                            <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox31" value="" />
-                                            <label class="form-check-label" for="exampleCheckbox31"><span>Used (45)</span></label>
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <a href="shop-grid-right.html" class="btn btn-sm btn-default"> Fillter</a>
-                            </div>
-                            <!-- Product sidebar Widget -->
-                            <div class="sidebar-widget product-sidebar mb-30 p-30 bg-grey border-radius-10">
-                                <h5 class="section-title style-1 mb-30">New products</h5>
-                                <div class="single-post clearfix">
-                                    <div class="image">
-                                        <img src="{% static 'assets/imgs/shop/thumbnail-3.jpg' %}" alt="#" />
-                                    </div>
-                                    <div class="content pt-10">
-                                        <h5><a href="shop-product-detail.html">Chen Cardigan</a></h5>
-                                        <p class="price mb-0 mt-5">$99.50</p>
-                                        <div class="product-rate">
-                                            <div class="product-rating" style="width: 90%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="single-post clearfix">
-                                    <div class="image">
-                                        <img src="{% static 'assets/imgs/shop/thumbnail-4.jpg' %}" alt="#" />
-                                    </div>
-                                    <div class="content pt-10">
-                                        <h6><a href="shop-product-detail.html">Chen Sweater</a></h6>
-                                        <p class="price mb-0 mt-5">$89.50</p>
-                                        <div class="product-rate">
-                                            <div class="product-rating" style="width: 80%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="single-post clearfix">
-                                    <div class="image">
-                                        <img src="{% static 'assets/imgs/shop/thumbnail-5.jpg' %}" alt="#" />
-                                    </div>
-                                    <div class="content pt-10">
-                                        <h6><a href="shop-product-detail.html">Colorful Jacket</a></h6>
-                                        <p class="price mb-0 mt-5">$25</p>
-                                        <div class="product-rate">
-                                            <div class="product-rating" style="width: 60%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                                                                             
+                            
                             <div class="banner-img wow fadeIn mb-lg-0 animated d-lg-block d-none">
                                 <img src="{% static 'assets/imgs/banner/banner-11.png' %}" alt="" />
                                 <div class="banner-text">

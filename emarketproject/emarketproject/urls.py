@@ -30,6 +30,7 @@ urlpatterns = [
     path("user/", include("userauths.urls")),
     path("blogs/", include("blogs.urls")),
     path("management/", include("management.urls")),
+    path("mpesa/", include('mpesa.urls')),
 
     path("ckeditor5/", include('django_ckeditor_5.urls'), name="ck_editor_5_upload_file"),
 

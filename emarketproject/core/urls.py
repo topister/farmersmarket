@@ -13,7 +13,7 @@ urlpatterns = [
     path("trendings/", views.Trendings.as_view(), name="trendings"),
     path("latest/", views.Latest.as_view(), name="latest"),
     path("popular/", views.Popular.as_view(), name="popular"),
-    path("search/", views.Search.as_view(), name="search"),
+    path("searchblog/", views.SearchBlog.as_view(), name="searchblog"),
     path("bookmark/", views.BookmarkView.as_view(), name="bookmark"),
     path("terms-and-conditions/", views.TermsAndConditions.as_view(), name="terms_and_conditions"),
     path("blogcategory/", views.BlogCategoryView.as_view(), name="blogcategory"),
@@ -48,7 +48,7 @@ urlpatterns = [
     path('ajax-add-review/<productId>/', views.ajax_add_review, name='ajax-add-review'),
 
     # Search
-    path('search/', views.search, name='search'),
+    path('searchproduct/', views.search, name='searchproduct'),
 
     # Filter products listings
     path('filter-products/', views.filter_products_listing, name='filter-products'),
@@ -73,10 +73,13 @@ urlpatterns = [
     path('paypal/', include('paypal.standard.ipn.urls')),
 
     # paypal payment successful
-    path('paypal-success/', views.paypal_successful, name='paypal-success'),
+    # path('paypal-success/', views.paypal_successful, name='paypal-success'),
     
     # paypal payment failed
-    path('paypal-fail/', views.paypal_failed, name='paypal-fail'),
+    path('payment-failed/', views.payment_failed, name='payment-failed'),
+
+    # payment completed vie
+    path('payment-completed/', views.payment_completed_view, name='payment-completed'),
 
     # General dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -92,12 +95,6 @@ urlpatterns = [
 
     # make address defualt
     path('default_address/', views.default_address, name='default_address'),
-
-    # wishlist
-    # path('wishlist/', views.wishlist, name="wishlist"),
-
-    # add to wishlist
-    # path('add-wishlist/', views.add_wishlist, name="add-wishlist"),
 
     # wishlist view
     path('wishlist/',views.wishlist, name='wishlist'),
@@ -120,14 +117,11 @@ urlpatterns = [
 
 
     # Project part
-    # path('projects/', views.home_view, name='home'),
     path('projects/', views.project_list_View, name='project-list'),
     path('project/create/', views.create_project_View, name='create-project'),
     path('project/<int:id>/', views.single_project_view, name='single-project'),
     path('apply-project/<int:id>/', views.apply_project_view, name='apply-project'),
     path('bookmark-project/<int:id>/', views.project_bookmark_view, name='bookmark-project'),
-    # path('about/', views.single_project_view, name='about'),
-    # path('contact/', views.single_project_view, name='contact'),
     path('result/', views.search_result_view, name='search_result'),
     path('project-dashboard/', views.dashboard_view, name='project-dashboard'),
     path('project-dashboard/buyer/project/<int:id>/applicants/', views.all_applicants_view, name='applicants'),

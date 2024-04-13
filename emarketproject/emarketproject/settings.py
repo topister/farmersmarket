@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
      # created apps
+    'mpesa',
     'blogs',
     'management',
     'core',
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_daraja',
 
    
 ]
@@ -279,69 +281,46 @@ CKEDITOR_CONFIGS = {
 
 PAYPAL_RECEIVER_EMAIL = 'digifarm497@gmail.com'
 PAYPAL_TEST = True
-# CKEDITOR_CONFIGS = {
-#     'default': {
-#         'toolbar': 'Full',
-#         'extraPlugins': ','.join([
-#             'image2',  # register the image2 plugin
-#             'uploadfile',  # register the uploadfile plugin on the toolbar
-#         ]),
-#     },
-# }
-
-# LOGIN_REDIRECT_URL = 'dashboard'
-# LOGOUT_REDIRECT_URL = 'login'
-
-# CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_USE_TLS = True
-# EMAIL_FROM = config("EMAIL_FROM")
-# SERVER_EMAIL = EMAIL_FROM
-
-# ACCOUNT_ACTIVATION_DAYS = 7
-# REGISTRATION_OPEN = False
-# # RECAPTCHA_PUBLIC_KEY = config('GOOGLE_RECAPTCHA_PUBLIC_KEY')
-# # RECAPTCHA_PRIVATE_KEY = config('GOOGLE_RECAPTCHA_PRIVATE_KEY')
-
-# # Django AllAuth Configurations
-# SOCIALACCOUNT_PROVIDERS = {
-#     'facebook': {
-#         'MESSAGE': ('Your social media account is not yet linked.'
-#                     ' Please go to your profile page and link it with us'),
-#         'SCOPE': ['email'],
-#         'OPTIONS': {'fields': ['id', 'name', 'email']},
-#         'EXCEPTION_HANDLER': lambda r: None,
-#     }
-# }
-
-# AUTHENTICATION_BACKENDS = (
-#     'social_core.backends.open_id.OpenIdAuth',  # for Google authentication
-#     'social_core.backends.google.GoogleOpenIdAuth',  # for Google authentication
-#     'social_core.backends.google.GoogleOAuth2',  # for Google Oauth2
-#     'django.contrib.auth.backends.ModelBackend',
-# )
-
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-
-# SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY')
-# SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET') /
-
-# SOCIAL_AUTH_PIPELINE = (
-#    'social_core.pipeline.social_auth.social_details',
-#    'social_core.pipeline.social_auth.social_uid',
-#    'social_core.pipeline.social_auth.social_user',
-#    'social_core.pipeline.user.get_username',
-#    'social_core.pipeline.user.create_user',
-#    'social_core.pipeline.user.save_user',
-#    'social_core.pipeline.social_auth.associate_user',
-#    'social_core.pipeline.social_auth.load_extra_data',
-#    'social_core.pipeline.user.user_details'
-# )
 
 
+MPESA_ENVIRONMENT = 'sandbox'
 
-# LOGOUT_URL = '/logout/'
+# Credentials for the daraja app
+
+# MPESA_CONSUMER_KEY = 'nk16Y74eSbTaGQgc9WF8j6FigApqOMWr'
+
+MPESA_CONSUMER_KEY = 'gs9hzH74pjJXAgAsWVisG63VKewLr1vmUzSeRHy8HegeOZmj'
+
+# MPESA_CONSUMER_SECRET = '40fD1vRXCq90XFaU'
+MPESA_CONSUMER_SECRET = 'ErSTEwZ2MukuV2dHvFGF3RCrM0V55IifGAZjXf7AaSNDv2nZI6LgFANAv1eduMBQ'
+
+#Shortcode to use for transactions. For sandbox  use the Shortcode 1 provided on test credentials page
+
+MPESA_SHORTCODE = '174379'
+
+# Shortcode to use for Lipa na MPESA Online (MPESA Express) transactions
+# This is only used on sandbox, do not set this variable in production
+# For sandbox use the Lipa na MPESA Online Shorcode provided on test credentials page
+
+MPESA_EXPRESS_SHORTCODE = '174379'
+
+# Type of shortcode
+# Possible values:
+# - paybill (For Paybill)
+# - till_number (For Buy Goods Till Number)
+
+MPESA_SHORTCODE_TYPE = 'paybill'
+
+# Lipa na MPESA Online passkey
+# Sandbox passkey is available on test credentials page
+# Production passkey is sent via email once you go live
+
+MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+
+# Username for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+MPESA_INITIATOR_USERNAME = 'testapi'
+
+# Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+MPESA_INITIATOR_SECURITY_CREDENTIAL = 'Safaricom999!*!'

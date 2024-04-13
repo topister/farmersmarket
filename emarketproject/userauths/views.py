@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib.auth import logout
 from userauths.models import User, Profile
 from django.contrib.auth import get_user_model
-User = get_user_model()
+# User = get_user_model()
 
 from django.contrib import auth
 from django.contrib import messages

@@ -1,5 +1,6 @@
 asgiref==3.7.2
 asttokens==2.4.1
+backcall==0.2.0
 black==22.12.0
 certifi==2024.2.2
 cffi==1.16.0
@@ -36,7 +37,7 @@ gopay==2.0.1
 gunicorn==21.2.0
 idna==3.6
 ipykernel==6.29.2
-ipython==8.21.0
+ipython==8.13.0
 jedi==0.19.1
 jupyter_client==8.6.0
 jupyter_core==5.7.1
@@ -47,6 +48,7 @@ packaging==23.2
 parso==0.8.3
 pathspec==0.12.1
 pexpect==4.9.0
+pickleshare==0.7.5
 Pillow==9.3.0
 platformdirs==4.2.0
 prompt-toolkit==3.0.43

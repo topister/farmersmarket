@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.views import View
 from django.db.models import F
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
 from .models import *
 
 # Create your views here.
@@ -26,7 +28,6 @@ class BlogView(View):
             context["liked"] = BlogLike.objects.filter(blog=blog, creator=request.user).first()
 
         return render(request, "blogs/blog.html", context)
-
 class CreateComment(View):
     def post(self, request):
         blog = get_object_or_404(Blog.objects.filter(is_active=True, id=request.POST.get("id")))
@@ -42,7 +43,6 @@ class CreateComment(View):
         c.save()
         messages.success(request, "Comment created")
         return redirect(get_blog_url(blog.slug)+"#comments")
-
 class CreateReply(View):
     def post(self, request):
         comment = get_object_or_404(Comment.objects.filter(is_active=True, id=request.POST.get("id")))
@@ -60,7 +60,6 @@ class CreateReply(View):
 
         messages.success(request, "Reply created")
         return redirect(get_blog_url(comment.blog.slug)+"#comments")
-
 class CreateBookmark(View):
     def post(self, request):
         blog = get_object_or_404(Blog.objects.filter(is_active=True, id=request.POST.get("id")))
@@ -75,7 +74,6 @@ class CreateBookmark(View):
             b.save()
             messages.success(request, "Bookmark created")
         return redirect("blogs:blog", slug=blog.slug)
-
 class CreateLike(View):
     def post(self, request):
         blog = get_object_or_404(Blog.objects.filter(is_active=True, id=request.POST.get("id")))

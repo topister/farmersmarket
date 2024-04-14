@@ -72,7 +72,7 @@ def product_list_category(request, categoryId):
         "products":products
     }
     return render(request, "core/category-product-list.html", context)
-
+@login_required
 def farmer_list(request):
     farmers = Farmer.objects.all()
     context = {
@@ -80,7 +80,7 @@ def farmer_list(request):
     }
 
     return render(request, "core/farmer-list.html", context)
-
+@login_required
 def buyer_list(request):
     buyers = Buyer.objects.all()
     context = {
@@ -88,7 +88,7 @@ def buyer_list(request):
     }
 
     return render(request, "core/buyer-list.html", context)
-
+@login_required
 def expert_list(request):
     experts = Expert.objects.all()
     context = {
@@ -97,7 +97,7 @@ def expert_list(request):
 
     return render(request, "core/expert-list.html", context)
 
-
+@login_required
 def farmer_details(request, farmerId):
     farmers = Farmer.objects.get(farmerId=farmerId)
     products = Product.objects.filter(farmer=farmers, product_status="published")
@@ -107,7 +107,7 @@ def farmer_details(request, farmerId):
     }
 
     return render(request, "core/farmer-detail.html", context)
-
+@login_required
 def buyer_details(request, buyerId):
     buyers = Buyer.objects.get(buyerId=buyerId)
     # products = Product.objects.filter(farmer=farmers, product_status="published")
@@ -117,7 +117,7 @@ def buyer_details(request, buyerId):
     }
 
     return render(request, "core/buyer-detail.html", context)
-
+@login_required
 def expert_details(request, expertId):
     experts = Expert.objects.get(expertId=expertId)
     # products = Product.objects.filter(farmer=farmers, product_status="published")
@@ -127,7 +127,7 @@ def expert_details(request, expertId):
     }
 
     return render(request, "core/expert-detail.html", context)
-
+@login_required
 def product_detail(request, productId): 
       
     product = Product.objects.get(productId=productId)
@@ -279,7 +279,7 @@ def filter_products_listing(request):
     data = render_to_string("core/filter-products.html", {"products": products})
     return JsonResponse({"data": data})
 
-
+@login_required
 def add_to_cart(request):
     cartProduct = {}
 
@@ -314,7 +314,7 @@ def add_to_cart(request):
     return JsonResponse({"data":request.session['cart_dataObj'], "cartTotalItems":len(request.session['cart_dataObj'])})
 
 
-
+@login_required
 def cart_view_homepage(request):
     cart_total_amount = 0
     if 'cart_dataObj' in request.session:
@@ -329,7 +329,7 @@ def cart_view_homepage(request):
         messages.warning(request, "Cart is empty!")
 
         return redirect("core:index")
-
+@login_required
 def delete_cart_item(request):
     product_id = str(request.GET['id'])
 
@@ -350,7 +350,7 @@ def delete_cart_item(request):
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
 
 
-
+@login_required
 def update_cart(request):
     product_id = str(request.GET['id'])
     product_qty = request.GET['quantity']
@@ -369,69 +369,6 @@ def update_cart(request):
 
     context = render_to_string("core/async-cart-list.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount})
     return JsonResponse({"data": context, 'cartTotalItems': len(request.session['cart_dataObj'])})
-
-# @login_required
-# def checkout(request):
-
-#     cart_total_amount = 0
-#     total = 0
-
-#     # checking if cart_dataObj session still exist
-
-#     if 'cart_dataObj' in request.session:
-#         # loop for the total amount for paypal
-#         for productId, item in request.session['cart_dataObj'].items():
-#             total += int(item['quantity']) * float(item['price'])
-
-#         # creating order object
-
-#         order = CartOrder.objects.create(
-#             user=request.user,
-#             price=total
-#         )
-
-#         # loop for the cart total amount
-
-#         for productId, item in request.session['cart_dataObj'].items():
-#             cart_total_amount += int(item['quantity']) * float(item['price'])
-
-#             cart_order_items = CartItems.objects.create(
-#                 order=order,
-#                 invoice_number="Invoice_NO" + str(order.id),
-#                 item=item['title'],
-#                 image=item['image'],
-#                 quantity=item['quantity'],
-#                 price=item['price'],
-#                 total=float(item['quantity']) * float(item['price']),
-#             )
-
-#     host = request.get_host()
-#     paypal_dict = {
-#         'business': settings.PAYPAL_RECEIVER_EMAIL,
-#         'amount': cart_total_amount,
-#         'item_name': 'Order-Item-No' + str(order.id),
-#         'invoice': 'INV-NO' + str(order.id),
-#         'currency_code': 'USD',
-#         'notify_url': 'http://{}{}'.format(host,reverse('core:paypal-ipn')),
-#         'return_url': 'http://{}{}'.format(host,reverse('core:paypal-success')),
-#         'cancel_return': 'http://{}{}'.format(host,reverse('core:paypal-fail')),
-#             }
-    
-#     # Form to render the paypal button
-#     payment_button_form = PayPalPaymentsForm(initial=paypal_dict)
-
-#     try:
-
-#         active_address = Address.objects.get(user=request.user, status=True)
-
-#     except:
-#         messages.warning(request, "You have multiple addresses, activate only one!")
-#         active_address = None
-
-
-    
-
-#     return render(request, "core/checkout.html", {"cart_data":request.session['cart_dataObj'], 'cartTotalItems': len(request.session['cart_dataObj']), 'cart_total_amount':cart_total_amount, 'payment_button_form':payment_button_form, 'active_address':active_address})
 
 @login_required
 def checkout(request):
